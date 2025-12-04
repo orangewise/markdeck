@@ -1,0 +1,213 @@
+"""Command-line interface for SlideDown."""
+
+import sys
+import webbrowser
+from pathlib import Path
+
+import click
+import uvicorn
+
+from slidedown import __version__
+from slidedown.server import app, set_presentation_file
+
+
+@click.group(invoke_without_command=True)
+@click.option('--version', is_flag=True, help='Show version and exit')
+@click.pass_context
+def main(ctx, version):
+    """SlideDown - A lightweight markdown presentation tool."""
+    if version:
+        click.echo(f"SlideDown version {__version__}")
+        sys.exit(0)
+    elif ctx.invoked_subcommand is None:
+        click.echo(ctx.get_help())
+
+
+@main.command()
+@click.argument('file', type=click.Path(exists=True, path_type=Path))
+@click.option('--port', '-p', default=8000, help='Port to run the server on', type=int)
+@click.option('--host', '-h', default='127.0.0.1', help='Host to bind to')
+@click.option('--no-browser', is_flag=True, help='Do not open browser automatically')
+@click.option('--watch', '-w', is_flag=True, help='Watch file for changes (not implemented yet)')
+def present(file: Path, port: int, host: str, no_browser: bool, watch: bool):
+    """
+    Start presenting a markdown file.
+
+    Example: slidedown present my-slides.md
+    """
+    # Validate file
+    if not file.exists():
+        click.echo(f"Error: File not found: {file}", err=True)
+        sys.exit(1)
+
+    if file.suffix.lower() not in ['.md', '.markdown']:
+        click.echo("Warning: File does not have .md or .markdown extension", err=True)
+
+    # Set the presentation file
+    set_presentation_file(file.resolve())
+
+    # Build URL
+    url = f"http://{host}:{port}"
+
+    click.echo("Starting SlideDown server...")
+    click.echo(f"Presenting: {file.name}")
+    click.echo(f"URL: {url}")
+    click.echo("\nPress Ctrl+C to stop the server")
+
+    # Open browser
+    if not no_browser:
+        click.echo("Opening browser...")
+        webbrowser.open(url)
+
+    if watch:
+        click.echo("Warning: --watch mode is not yet implemented")
+
+    # Run the server
+    try:
+        uvicorn.run(
+            app,
+            host=host,
+            port=port,
+            log_level="warning",
+            access_log=False,
+        )
+    except KeyboardInterrupt:
+        click.echo("\n\nShutting down SlideDown server...")
+        sys.exit(0)
+
+
+@main.command()
+@click.argument('filename', type=click.Path(path_type=Path))
+@click.option('--title', '-t', help='Presentation title')
+def init(filename: Path, title: str):
+    """
+    Create a new presentation from a template.
+
+    Example: slidedown init my-presentation.md
+    """
+    if filename.exists():
+        click.confirm(f"File {filename} already exists. Overwrite?", abort=True)
+
+    # Create template
+    template_title = title or filename.stem.replace('-', ' ').replace('_', ' ').title()
+    template = f"""# {template_title}
+
+Your presentation subtitle or tagline
+
+---
+
+## About This Presentation
+
+This is a sample slide created by SlideDown.
+
+- Edit this file to create your presentation
+- Separate slides with `---`
+- Use standard Markdown syntax
+
+---
+
+## Features
+
+- **Simple**: Just write Markdown
+- **Fast**: Lightweight and responsive
+- **Beautiful**: Clean, modern design
+
+---
+
+## Code Examples
+
+You can include code blocks with syntax highlighting:
+
+```python
+def hello_slidedown():
+    print("Hello from SlideDown!")
+    return "Awesome presentations"
+```
+
+---
+
+## Speaker Notes
+
+You can add speaker notes that are hidden by default.
+
+Press 'S' to toggle speaker notes view.
+
+<!--NOTES:
+These are speaker notes.
+They won't appear on the slide but you can view them in speaker mode.
+-->
+
+---
+
+## Keyboard Shortcuts
+
+Press `?` to see all available shortcuts
+
+| Key | Action |
+|-----|--------|
+| → / Space | Next slide |
+| ← | Previous slide |
+| F | Fullscreen |
+| S | Speaker notes |
+
+---
+
+## Thank You!
+
+Start creating your presentation now:
+
+```bash
+slidedown present {filename.name}
+```
+
+Visit the documentation for more features!
+"""
+
+    filename.write_text(template, encoding='utf-8')
+    click.echo(f"Created presentation: {filename}")
+    click.echo("\nStart presenting with:")
+    click.echo(f"  slidedown present {filename}")
+
+
+@main.command()
+@click.argument('file', type=click.Path(exists=True, path_type=Path))
+def validate(file: Path):
+    """
+    Validate a markdown presentation file.
+
+    Example: slidedown validate my-slides.md
+    """
+    from slidedown.parser import SlideParser
+
+    try:
+        parser = SlideParser(file)
+        slides = parser.parse()
+        title = parser.get_title()
+
+        click.echo("✓ File is valid")
+        click.echo(f"  Title: {title}")
+        click.echo(f"  Slides: {len(slides)}")
+
+        # Check for potential issues
+        warnings = []
+        for i, slide in enumerate(slides, 1):
+            if not slide.content.strip():
+                warnings.append(f"  - Slide {i}: Empty content")
+            if len(slide.content) > 2000:
+                warnings.append(f"  - Slide {i}: Very long content ({len(slide.content)} chars)")
+
+        if warnings:
+            click.echo("\nWarnings:")
+            for warning in warnings:
+                click.echo(warning)
+
+    except FileNotFoundError:
+        click.echo(f"✗ File not found: {file}", err=True)
+        sys.exit(1)
+    except Exception as e:
+        click.echo(f"✗ Error validating file: {e}", err=True)
+        sys.exit(1)
+
+
+if __name__ == '__main__':
+    main()
