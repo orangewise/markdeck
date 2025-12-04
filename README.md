@@ -20,12 +20,57 @@ A lightweight, markdown-based presentation tool that runs locally.
 
 ### Installation
 
+#### Install from GitHub (Recommended)
+
 ```bash
+# Install directly from GitHub using uv
+uv pip install git+https://github.com/orangewise/slidedown.git
+
+# Install from a specific branch
+uv pip install git+https://github.com/orangewise/slidedown.git@claude/init-slidedown-project-01DJeHxbuthmNtDFjgxToFrP
+
+# Or run without installing
+uv run --from git+https://github.com/orangewise/slidedown.git slidedown present examples/demo.md
+```
+
+#### Install from Local Clone
+
+```bash
+# Clone the repository
+git clone https://github.com/orangewise/slidedown.git
+cd slidedown
+
 # Using uv (recommended)
 uv pip install -e .
 
 # Or using pip
 pip install -e .
+```
+
+### Try It Without Installing
+
+Test SlideDown immediately using `uv run`:
+
+```bash
+# Create a test presentation
+echo "# Hello SlideDown
+
+---
+
+## Your First Slide
+
+- Quick
+- Easy
+- Beautiful
+
+---
+
+## That's It!
+
+Start creating your own presentations!" > test.md
+
+# Present it (automatically installs and runs)
+uv run --from git+https://github.com/orangewise/slidedown.git slidedown present test.md
 ```
 
 ### Create Your First Presentation
