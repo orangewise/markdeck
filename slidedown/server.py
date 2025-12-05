@@ -3,7 +3,7 @@
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -13,6 +13,8 @@ app = FastAPI(title="SlideDown", description="Markdown presentation tool")
 
 # Global variable to store the current presentation file
 _current_file: Path | None = None
+_watch_enabled: bool = False
+_websocket_clients: list[WebSocket] = []
 
 
 def set_presentation_file(file_path: str | Path | None) -> None:
@@ -24,6 +26,32 @@ def set_presentation_file(file_path: str | Path | None) -> None:
     """
     global _current_file
     _current_file = Path(file_path) if file_path is not None else None
+
+
+def enable_watch_mode(enabled: bool = True) -> None:
+    """
+    Enable or disable watch mode for hot reloading.
+
+    Args:
+        enabled: Whether to enable watch mode
+    """
+    global _watch_enabled
+    _watch_enabled = enabled
+
+
+async def notify_clients_reload() -> None:
+    """Notify all connected WebSocket clients to reload."""
+    disconnected = []
+    for client in _websocket_clients:
+        try:
+            await client.send_json({"type": "reload"})
+        except Exception:
+            disconnected.append(client)
+
+    # Remove disconnected clients
+    for client in disconnected:
+        if client in _websocket_clients:
+            _websocket_clients.remove(client)
 
 
 def get_static_dir() -> Path:
@@ -86,3 +114,34 @@ async def health() -> dict[str, str]:
         Status message
     """
     return {"status": "ok"}
+
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket) -> None:
+    """
+    WebSocket endpoint for hot reloading.
+
+    Args:
+        websocket: WebSocket connection
+    """
+    await websocket.accept()
+    _websocket_clients.append(websocket)
+
+    try:
+        # Keep connection alive
+        while True:
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        if websocket in _websocket_clients:
+            _websocket_clients.remove(websocket)
+
+
+@app.get("/api/watch-enabled")
+async def watch_enabled() -> dict[str, bool]:
+    """
+    Check if watch mode is enabled.
+
+    Returns:
+        Dictionary with watch_enabled status
+    """
+    return {"watch_enabled": _watch_enabled}

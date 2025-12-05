@@ -9,6 +9,7 @@ A lightweight, markdown-based presentation tool that runs locally.
 
 - **📝 Markdown-based**: Write presentations in plain text using familiar Markdown syntax
 - **🚀 Fast & Lightweight**: No heavy frameworks, just clean HTML/CSS/JS
+- **🔥 Hot Reload**: Automatically refreshes when you edit your markdown file (with `--watch`)
 - **🎨 Beautiful Design**: Modern, distraction-free presentation interface
 - **⌨️ Keyboard Shortcuts**: Navigate efficiently with keyboard controls
 - **💬 Speaker Notes**: Hidden notes visible in speaker view
@@ -96,11 +97,17 @@ Your browser will automatically open to `http://127.0.0.1:8000` with your presen
 # Present a markdown file
 slidedown present slides.md
 
+# Present with hot reload (auto-refresh on file changes)
+slidedown present slides.md --watch
+
 # Present on a custom port
 slidedown present slides.md --port 3000
 
 # Present without auto-opening browser
 slidedown present slides.md --no-browser
+
+# Combine options
+slidedown present slides.md --watch --port 3000
 
 # Create a new presentation
 slidedown init my-talk.md
@@ -244,6 +251,26 @@ These notes are only visible when you press 'S'
 -->
 ```
 
+### Hot Reload
+
+SlideDown includes hot reload functionality for a seamless development experience:
+
+```bash
+# Start with watch mode enabled
+slidedown present my-slides.md --watch
+```
+
+**What happens:**
+- SlideDown monitors your markdown file for changes
+- When you save edits, the presentation automatically refreshes in your browser
+- You stay on the current slide (or closest available slide if slides were removed)
+- A brief "Presentation reloaded" notification appears
+
+**Perfect for:**
+- Iterating on your presentation content
+- Live editing during practice sessions
+- Quick feedback on formatting and layout changes
+
 ## 🛠️ Development
 
 ### Setup Development Environment
@@ -257,7 +284,7 @@ cd slidedown
 uv pip install -e ".[dev]"
 
 # Run tests
-pytest
+python -m unittest discover tests/
 
 # Run linter
 ruff check .
@@ -270,13 +297,13 @@ ruff format .
 
 ```bash
 # Run all tests
-pytest
+python -m unittest discover tests/
 
-# Run with coverage
-pytest --cov=slidedown
+# Run with verbose output
+python -m unittest discover tests/ -v
 
 # Run specific test file
-pytest tests/test_parser.py
+python -m unittest tests.test_parser
 ```
 
 ### Project Commands
@@ -310,9 +337,9 @@ slidedown present examples/code-examples.md
 
 ## 🗺️ Roadmap
 
-### Phase 2 - Enhanced Features (Planned)
+### Phase 2 - Enhanced Features
 
-- [ ] Hot reload (watch file for changes)
+- [x] Hot reload (watch file for changes) ✓
 - [ ] Multiple themes (dark/light mode toggle)
 - [ ] Slide overview/grid view
 - [ ] Slide transitions

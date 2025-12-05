@@ -1,13 +1,13 @@
 """Tests for the markdown parser."""
 
+import tempfile
+import unittest
 from pathlib import Path
-
-import pytest
 
 from slidedown.parser import Slide, SlideParser
 
 
-class TestSlide:
+class TestSlide(unittest.TestCase):
     """Test the Slide class."""
 
     def test_slide_creation(self):
@@ -15,9 +15,9 @@ class TestSlide:
         content = "# Test Slide\n\nThis is content."
         slide = Slide(content, 0)
 
-        assert slide.content == content
-        assert slide.index == 0
-        assert slide.notes == ""
+        self.assertEqual(slide.content, content)
+        self.assertEqual(slide.index, 0)
+        self.assertEqual(slide.notes, "")
 
     def test_slide_with_notes(self):
         """Test slide with speaker notes."""
@@ -30,25 +30,25 @@ These are notes
 -->"""
         slide = Slide(content, 0)
 
-        assert "NOTES" not in slide.content
-        assert slide.notes == "These are notes"
+        self.assertNotIn("NOTES", slide.content)
+        self.assertEqual(slide.notes, "These are notes")
 
     def test_slide_to_dict(self):
         """Test converting slide to dictionary."""
         slide = Slide("# Test", 0)
         result = slide.to_dict()
 
-        assert result["id"] == 0
-        assert result["content"] == "# Test"
-        assert "notes" in result
+        self.assertEqual(result["id"], 0)
+        self.assertEqual(result["content"], "# Test")
+        self.assertIn("notes", result)
 
     def test_empty_slide(self):
         """Test handling of empty slide."""
         slide = Slide("   \n\n   ", 0)
-        assert slide.content == ""
+        self.assertEqual(slide.content, "")
 
 
-class TestSlideParser:
+class TestSlideParser(unittest.TestCase):
     """Test the SlideParser class."""
 
     def test_parse_content_single_slide(self):
@@ -56,8 +56,8 @@ class TestSlideParser:
         content = "# Single Slide\n\nContent here."
         slides = SlideParser.parse_content(content)
 
-        assert len(slides) == 1
-        assert slides[0].content == content
+        self.assertEqual(len(slides), 1)
+        self.assertEqual(slides[0].content, content)
 
     def test_parse_content_multiple_slides(self):
         """Test parsing content with multiple slides."""
@@ -78,10 +78,10 @@ Content 2
 Content 3"""
         slides = SlideParser.parse_content(content)
 
-        assert len(slides) == 3
-        assert "# Slide 1" in slides[0].content
-        assert "# Slide 2" in slides[1].content
-        assert "# Slide 3" in slides[2].content
+        self.assertEqual(len(slides), 3)
+        self.assertIn("# Slide 1", slides[0].content)
+        self.assertIn("# Slide 2", slides[1].content)
+        self.assertIn("# Slide 3", slides[2].content)
 
     def test_parse_content_with_empty_slides(self):
         """Test parsing content with empty slides filtered out."""
@@ -95,19 +95,19 @@ Content 3"""
         slides = SlideParser.parse_content(content)
 
         # Empty slides should be filtered out
-        assert all(slide.content for slide in slides)
+        self.assertTrue(all(slide.content for slide in slides))
 
     def test_parse_content_edge_cases(self):
         """Test edge cases in parsing."""
         # Delimiter at start
         content = "---\n# Slide 1"
         slides = SlideParser.parse_content(content)
-        assert len(slides) >= 1
+        self.assertGreaterEqual(len(slides), 1)
 
         # Delimiter at end
         content = "# Slide 1\n---"
         slides = SlideParser.parse_content(content)
-        assert len(slides) >= 1
+        self.assertGreaterEqual(len(slides), 1)
 
     def test_get_title_from_h1(self):
         """Test extracting title from first H1."""
@@ -122,7 +122,7 @@ Content 3"""
         parser.parse = mock_parse
 
         title = parser.get_title()
-        assert title == "My Presentation"
+        self.assertEqual(title, "My Presentation")
 
     def test_to_json(self):
         """Test converting parser output to JSON format."""
@@ -138,25 +138,26 @@ Content 3"""
 
         result = parser.to_json()
 
-        assert "slides" in result
-        assert "total" in result
-        assert "title" in result
-        assert result["total"] == 2
-        assert len(result["slides"]) == 2
+        self.assertIn("slides", result)
+        self.assertIn("total", result)
+        self.assertIn("title", result)
+        self.assertEqual(result["total"], 2)
+        self.assertEqual(len(result["slides"]), 2)
 
 
-class TestSlideParserWithFiles:
+class TestSlideParserWithFiles(unittest.TestCase):
     """Test SlideParser with actual files."""
 
     def test_file_not_found(self):
         """Test handling of missing file."""
-        with pytest.raises(FileNotFoundError):
+        with self.assertRaises(FileNotFoundError):
             SlideParser("nonexistent.md")
 
-    def test_parse_real_file(self, tmp_path):
+    def test_parse_real_file(self):
         """Test parsing a real markdown file."""
-        test_file = tmp_path / "test.md"
-        content = """# Test Presentation
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            test_file = Path(tmp_dir) / "test.md"
+            content = """# Test Presentation
 
 Intro slide
 
@@ -175,22 +176,27 @@ Speaker notes for testing
 # Final Slide
 
 Conclusion"""
-        test_file.write_text(content, encoding="utf-8")
+            test_file.write_text(content, encoding="utf-8")
 
-        parser = SlideParser(test_file)
-        slides = parser.parse()
+            parser = SlideParser(test_file)
+            slides = parser.parse()
 
-        assert len(slides) == 3
-        assert slides[0].index == 0
-        assert slides[1].notes == "Speaker notes for testing"
-        assert slides[2].index == 2
+            self.assertEqual(len(slides), 3)
+            self.assertEqual(slides[0].index, 0)
+            self.assertEqual(slides[1].notes, "Speaker notes for testing")
+            self.assertEqual(slides[2].index, 2)
 
-    def test_get_title_fallback_to_filename(self, tmp_path):
+    def test_get_title_fallback_to_filename(self):
         """Test title fallback to filename when no H1 present."""
-        test_file = tmp_path / "my-presentation.md"
-        test_file.write_text("Content without H1", encoding="utf-8")
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            test_file = Path(tmp_dir) / "my-presentation.md"
+            test_file.write_text("Content without H1", encoding="utf-8")
 
-        parser = SlideParser(test_file)
-        title = parser.get_title()
+            parser = SlideParser(test_file)
+            title = parser.get_title()
 
-        assert title == "my-presentation"
+            self.assertEqual(title, "my-presentation")
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -50,6 +50,9 @@ class SlideShow {
             // Set up event listeners
             this.setupEventListeners();
 
+            // Set up WebSocket for hot reloading
+            await this.setupHotReload();
+
             // Show first slide
             this.showSlide(0);
 
@@ -93,6 +96,104 @@ class SlideShow {
                 e.preventDefault();
             }
         });
+    }
+
+    async setupHotReload() {
+        // Check if watch mode is enabled
+        try {
+            const response = await fetch('/api/watch-enabled');
+            const data = await response.json();
+
+            if (!data.watch_enabled) {
+                return;
+            }
+
+            // Connect to WebSocket for hot reload
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = `${protocol}//${window.location.host}/ws`;
+
+            const connectWebSocket = () => {
+                const ws = new WebSocket(wsUrl);
+
+                ws.onopen = () => {
+                    console.log('Hot reload connected');
+                };
+
+                ws.onmessage = async (event) => {
+                    const message = JSON.parse(event.data);
+                    if (message.type === 'reload') {
+                        console.log('File changed, reloading slides...');
+                        await this.reloadPresentation();
+                    }
+                };
+
+                ws.onerror = (error) => {
+                    console.error('WebSocket error:', error);
+                };
+
+                ws.onclose = () => {
+                    console.log('WebSocket closed, reconnecting in 2s...');
+                    setTimeout(connectWebSocket, 2000);
+                };
+            };
+
+            connectWebSocket();
+        } catch (error) {
+            console.error('Failed to set up hot reload:', error);
+        }
+    }
+
+    async reloadPresentation() {
+        const currentSlide = this.currentSlideIndex;
+
+        try {
+            await this.loadSlides();
+            // Try to stay on the same slide, or go to last slide if current doesn't exist
+            const targetSlide = Math.min(currentSlide, this.totalSlides - 1);
+            this.showSlide(targetSlide);
+
+            // Show a brief notification
+            this.showReloadNotification();
+        } catch (error) {
+            console.error('Failed to reload presentation:', error);
+        }
+    }
+
+    showReloadNotification() {
+        // Create a temporary notification
+        const notification = document.createElement('div');
+        notification.textContent = 'Presentation reloaded';
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(74, 158, 255, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            z-index: 10000;
+            font-size: 1rem;
+            animation: fadeInOut 2s ease-in-out;
+        `;
+
+        // Add animation style if not exists
+        if (!document.getElementById('reload-animation')) {
+            const style = document.createElement('style');
+            style.id = 'reload-animation';
+            style.textContent = `
+                @keyframes fadeInOut {
+                    0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+                    20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                    80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                    100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 2000);
     }
 
     handleKeyPress(e) {

@@ -8,7 +8,7 @@ import click
 import uvicorn
 
 from slidedown import __version__
-from slidedown.server import app, set_presentation_file
+from slidedown.server import app, enable_watch_mode, set_presentation_file
 
 
 @click.group(invoke_without_command=True)
@@ -28,7 +28,7 @@ def main(ctx, version):
 @click.option('--port', '-p', default=8000, help='Port to run the server on', type=int)
 @click.option('--host', '-h', default='127.0.0.1', help='Host to bind to')
 @click.option('--no-browser', is_flag=True, help='Do not open browser automatically')
-@click.option('--watch', '-w', is_flag=True, help='Watch file for changes (not implemented yet)')
+@click.option('--watch', '-w', is_flag=True, help='Watch file for changes and reload automatically')
 def present(file: Path, port: int, host: str, no_browser: bool, watch: bool):
     """
     Start presenting a markdown file.
@@ -44,7 +44,13 @@ def present(file: Path, port: int, host: str, no_browser: bool, watch: bool):
         click.echo("Warning: File does not have .md or .markdown extension", err=True)
 
     # Set the presentation file
-    set_presentation_file(file.resolve())
+    file_path = file.resolve()
+    set_presentation_file(file_path)
+
+    # Enable watch mode if requested
+    if watch:
+        enable_watch_mode(True)
+        click.echo("Hot reload enabled - presentation will update when file changes")
 
     # Build URL
     url = f"http://{host}:{port}"
@@ -59,21 +65,52 @@ def present(file: Path, port: int, host: str, no_browser: bool, watch: bool):
         click.echo("Opening browser...")
         webbrowser.open(url)
 
-    if watch:
-        click.echo("Warning: --watch mode is not yet implemented")
-
-    # Run the server
+    # Run the server with file watcher if watch mode is enabled
     try:
-        uvicorn.run(
-            app,
-            host=host,
-            port=port,
-            log_level="warning",
-            access_log=False,
-        )
+        if watch:
+            # Use uvicorn with lifespan to start file watcher
+            config = uvicorn.Config(
+                app,
+                host=host,
+                port=port,
+                log_level="warning",
+                access_log=False,
+            )
+            server = uvicorn.Server(config)
+
+            # Start file watcher before running server
+            import asyncio
+
+            async def run_with_watcher():
+                # Start the file watcher task
+                watcher_task = asyncio.create_task(
+                    _watch_file_async(file_path)
+                )
+                try:
+                    await server.serve()
+                except asyncio.CancelledError:
+                    watcher_task.cancel()
+                    raise
+
+            asyncio.run(run_with_watcher())
+        else:
+            uvicorn.run(
+                app,
+                host=host,
+                port=port,
+                log_level="warning",
+                access_log=False,
+            )
     except KeyboardInterrupt:
         click.echo("\n\nShutting down SlideDown server...")
         sys.exit(0)
+
+
+async def _watch_file_async(file_path: Path):
+    """Watch file for changes in async context."""
+    from slidedown.watcher import watch_file
+
+    await watch_file(file_path)
 
 
 @main.command()
