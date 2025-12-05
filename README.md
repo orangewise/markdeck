@@ -47,14 +47,11 @@ uv pip install -e .
 pip install -e .
 ```
 
-### Quick Test
+### Run Without Installing
 
-Try SlideDown with an example:
+You can run SlideDown directly without permanent installation:
 
 ```bash
-# Install from GitHub
-uv pip install git+https://github.com/orangewise/slidedown.git@claude/init-slidedown-project-01DJeHxbuthmNtDFjgxToFrP
-
 # Create a test presentation
 echo "# Hello SlideDown
 
@@ -72,8 +69,11 @@ echo "# Hello SlideDown
 
 Start creating your own presentations!" > test.md
 
-# Present it
-slidedown present test.md
+# Run directly from GitHub (no installation needed)
+uvx --from git+https://github.com/orangewise/slidedown.git@claude/init-slidedown-project-01DJeHxbuthmNtDFjgxToFrP slidedown present test.md
+
+# Or use the main branch
+uvx --from git+https://github.com/orangewise/slidedown.git slidedown present test.md
 ```
 
 ### Create Your First Presentation
