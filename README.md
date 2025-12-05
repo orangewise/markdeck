@@ -29,8 +29,8 @@ uv pip install git+https://github.com/orangewise/slidedown.git
 # Install from a specific branch
 uv pip install git+https://github.com/orangewise/slidedown.git@claude/init-slidedown-project-01DJeHxbuthmNtDFjgxToFrP
 
-# Or run without installing
-uv run --from git+https://github.com/orangewise/slidedown.git slidedown present examples/demo.md
+# Then run it
+slidedown present examples/demo.md
 ```
 
 #### Install from Local Clone
@@ -47,11 +47,14 @@ uv pip install -e .
 pip install -e .
 ```
 
-### Try It Without Installing
+### Quick Test
 
-Test SlideDown immediately using `uv run`:
+Try SlideDown with an example:
 
 ```bash
+# Install from GitHub
+uv pip install git+https://github.com/orangewise/slidedown.git@claude/init-slidedown-project-01DJeHxbuthmNtDFjgxToFrP
+
 # Create a test presentation
 echo "# Hello SlideDown
 
@@ -69,8 +72,8 @@ echo "# Hello SlideDown
 
 Start creating your own presentations!" > test.md
 
-# Present it (automatically installs and runs)
-uv run --from git+https://github.com/orangewise/slidedown.git slidedown present test.md
+# Present it
+slidedown present test.md
 ```
 
 ### Create Your First Presentation
