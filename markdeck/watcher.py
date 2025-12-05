@@ -5,7 +5,7 @@ from pathlib import Path
 
 from watchfiles import awatch
 
-from slidedown.server import notify_clients_reload
+from markdeck.server import notify_clients_reload
 
 
 async def watch_file(file_path: Path) -> None:

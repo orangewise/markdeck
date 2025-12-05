@@ -1,4 +1,4 @@
-# SlideDown 🎬
+# MarkDeck 🎬
 
 A lightweight, markdown-based presentation tool that runs locally.
 
@@ -25,21 +25,21 @@ A lightweight, markdown-based presentation tool that runs locally.
 
 ```bash
 # Install directly from GitHub using uv
-uv pip install git+https://github.com/orangewise/slidedown.git
+uv pip install git+https://github.com/orangewise/markdeck.git
 
 # Install from a specific branch
-uv pip install git+https://github.com/orangewise/slidedown.git@claude/init-slidedown-project-01DJeHxbuthmNtDFjgxToFrP
+uv pip install git+https://github.com/orangewise/markdeck.git@claude/init-markdeck-project-01DJeHxbuthmNtDFjgxToFrP
 
 # Then run it
-slidedown present examples/demo.md
+markdeck present examples/demo.md
 ```
 
 #### Install from Local Clone
 
 ```bash
 # Clone the repository
-git clone https://github.com/orangewise/slidedown.git
-cd slidedown
+git clone https://github.com/orangewise/markdeck.git
+cd markdeck
 
 # Using uv (recommended)
 uv pip install -e .
@@ -50,11 +50,11 @@ pip install -e .
 
 ### Run Without Installing
 
-You can run SlideDown directly without permanent installation:
+You can run MarkDeck directly without permanent installation:
 
 ```bash
 # Create a test presentation
-echo "# Hello SlideDown
+echo "# Hello MarkDeck
 
 ---
 
@@ -71,20 +71,20 @@ echo "# Hello SlideDown
 Start creating your own presentations!" > test.md
 
 # Run directly from GitHub (no installation needed)
-uvx --from git+https://github.com/orangewise/slidedown.git@claude/init-slidedown-project-01DJeHxbuthmNtDFjgxToFrP slidedown present test.md
+uvx --from git+https://github.com/orangewise/markdeck.git@claude/init-markdeck-project-01DJeHxbuthmNtDFjgxToFrP markdeck present test.md
 
 # Or use the main branch
-uvx --from git+https://github.com/orangewise/slidedown.git slidedown present test.md
+uvx --from git+https://github.com/orangewise/markdeck.git markdeck present test.md
 ```
 
 ### Create Your First Presentation
 
 ```bash
 # Create a new presentation from template
-slidedown init my-presentation.md
+markdeck init my-presentation.md
 
 # Start presenting
-slidedown present my-presentation.md
+markdeck present my-presentation.md
 ```
 
 Your browser will automatically open to `http://127.0.0.1:8000` with your presentation ready!
@@ -95,31 +95,31 @@ Your browser will automatically open to `http://127.0.0.1:8000` with your presen
 
 ```bash
 # Present a markdown file
-slidedown present slides.md
+markdeck present slides.md
 
 # Present with hot reload (auto-refresh on file changes)
-slidedown present slides.md --watch
+markdeck present slides.md --watch
 
 # Present on a custom port
-slidedown present slides.md --port 3000
+markdeck present slides.md --port 3000
 
 # Present without auto-opening browser
-slidedown present slides.md --no-browser
+markdeck present slides.md --no-browser
 
 # Combine options
-slidedown present slides.md --watch --port 3000
+markdeck present slides.md --watch --port 3000
 
 # Create a new presentation
-slidedown init my-talk.md
+markdeck init my-talk.md
 
 # Create with custom title
-slidedown init my-talk.md --title "My Awesome Talk"
+markdeck init my-talk.md --title "My Awesome Talk"
 
 # Validate a presentation file
-slidedown validate slides.md
+markdeck validate slides.md
 
 # Show version
-slidedown --version
+markdeck --version
 ```
 
 ### Markdown Syntax
@@ -144,8 +144,8 @@ This is the content of the first slide.
 # Code Example
 
 ```python
-def hello_slidedown():
-    print("Hello from SlideDown!")
+def hello_markdeck():
+    print("Hello from MarkDeck!")
 ```
 
 ---
@@ -176,8 +176,8 @@ Press 'S' to toggle speaker notes view.
 ## 📁 Project Structure
 
 ```
-slidedown/
-├── slidedown/          # Main package
+markdeck/
+├── markdeck/          # Main package
 │   ├── __init__.py
 │   ├── __main__.py     # Entry point
 │   ├── cli.py          # CLI interface
@@ -199,7 +199,7 @@ slidedown/
 
 ### Markdown Support
 
-SlideDown supports standard Markdown features:
+MarkDeck supports standard Markdown features:
 
 - **Headings**: `#` through `######`
 - **Bold**: `**bold**` or `__bold__`
@@ -214,7 +214,7 @@ SlideDown supports standard Markdown features:
 
 ### Code Syntax Highlighting
 
-SlideDown includes syntax highlighting for many languages:
+MarkDeck includes syntax highlighting for many languages:
 
 ```python
 # Python
@@ -230,7 +230,7 @@ const greet = (name) => console.log(`Hello, ${name}!`);
 ```rust
 // Rust
 fn main() {
-    println!("Hello, SlideDown!");
+    println!("Hello, MarkDeck!");
 }
 ```
 
@@ -253,15 +253,15 @@ These notes are only visible when you press 'S'
 
 ### Hot Reload
 
-SlideDown includes hot reload functionality for a seamless development experience:
+MarkDeck includes hot reload functionality for a seamless development experience:
 
 ```bash
 # Start with watch mode enabled
-slidedown present my-slides.md --watch
+markdeck present my-slides.md --watch
 ```
 
 **What happens:**
-- SlideDown monitors your markdown file for changes
+- MarkDeck monitors your markdown file for changes
 - When you save edits, the presentation automatically refreshes in your browser
 - You stay on the current slide (or closest available slide if slides were removed)
 - A brief "Presentation reloaded" notification appears
@@ -277,8 +277,8 @@ slidedown present my-slides.md --watch
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/slidedown.git
-cd slidedown
+git clone https://github.com/YOUR_USERNAME/markdeck.git
+cd markdeck
 
 # Install with development dependencies
 uv pip install -e ".[dev]"
@@ -310,29 +310,29 @@ python -m unittest tests.test_parser
 
 ```bash
 # Run the server in development mode
-python -m slidedown present examples/demo.md
+python -m markdeck present examples/demo.md
 
 # Run linting
-ruff check slidedown/ tests/
+ruff check markdeck/ tests/
 
 # Format code
-ruff format slidedown/ tests/
+ruff format markdeck/ tests/
 ```
 
 ## 📚 Examples
 
 Check out the `examples/` directory for sample presentations:
 
-- **demo.md**: Basic introduction to SlideDown
+- **demo.md**: Basic introduction to MarkDeck
 - **features.md**: Comprehensive feature showcase
 - **code-examples.md**: Syntax highlighting demo
 
 Try them out:
 
 ```bash
-slidedown present examples/demo.md
-slidedown present examples/features.md
-slidedown present examples/code-examples.md
+markdeck present examples/demo.md
+markdeck present examples/features.md
+markdeck present examples/code-examples.md
 ```
 
 ## 🗺️ Roadmap
@@ -387,14 +387,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- 🐛 [Report bugs](https://github.com/YOUR_USERNAME/slidedown/issues)
-- 💡 [Request features](https://github.com/YOUR_USERNAME/slidedown/issues)
-- 📖 [Documentation](https://github.com/YOUR_USERNAME/slidedown)
+- 🐛 [Report bugs](https://github.com/YOUR_USERNAME/markdeck/issues)
+- 💡 [Request features](https://github.com/YOUR_USERNAME/markdeck/issues)
+- 📖 [Documentation](https://github.com/YOUR_USERNAME/markdeck)
 
 ## ⭐ Show Your Support
 
-If you find SlideDown useful, please consider giving it a star on GitHub!
+If you find MarkDeck useful, please consider giving it a star on GitHub!
 
 ---
 
-**Made with ❤️ by the SlideDown community**
+**Made with ❤️ by the MarkDeck community**

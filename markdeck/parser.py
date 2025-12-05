@@ -1,4 +1,4 @@
-"""Markdown slide parser for SlideDown."""
+"""Markdown slide parser for MarkDeck."""
 
 import re
 from pathlib import Path

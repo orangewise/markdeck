@@ -238,7 +238,7 @@ echo "Deployment complete!"
 
 ```json
 {
-  "name": "slidedown",
+  "name": "markdeck",
   "version": "0.1.0",
   "description": "A lightweight markdown presentation tool",
   "dependencies": {
@@ -247,7 +247,7 @@ echo "Deployment complete!"
     "python-markdown": "^3.5.0"
   },
   "scripts": {
-    "dev": "uvicorn slidedown.server:app --reload",
+    "dev": "uvicorn markdeck.server:app --reload",
     "test": "pytest",
     "lint": "ruff check ."
   }
@@ -388,6 +388,6 @@ class ComplexDataProcessor:
 
 ## Thank You!
 
-These code examples showcase SlideDown's syntax highlighting capabilities.
+These code examples showcase MarkDeck's syntax highlighting capabilities.
 
 All powered by highlight.js!

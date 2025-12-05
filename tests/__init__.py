@@ -1,1 +1,1 @@
-"""Tests for SlideDown."""
+"""Tests for MarkDeck."""

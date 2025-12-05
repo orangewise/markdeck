@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from slidedown.parser import Slide, SlideParser
+from markdeck.parser import Slide, SlideParser
 
 
 class TestSlide(unittest.TestCase):

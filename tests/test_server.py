@@ -6,7 +6,7 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
-from slidedown.server import app, set_presentation_file
+from markdeck.server import app, set_presentation_file
 
 
 class TestHealthEndpoint(unittest.TestCase):
@@ -125,7 +125,7 @@ class TestRootEndpoint(unittest.TestCase):
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         self.assertIn("text/html", response.headers["content-type"])
-        self.assertIn("SlideDown", response.text)
+        self.assertIn("MarkDeck", response.text)
 
 
 class TestStaticFiles(unittest.TestCase):

@@ -45,4 +45,4 @@ Thumbs.db
 
 # Project specific
 *.log
-.slidedown.yml
+.markdeck.yml

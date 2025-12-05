@@ -1,12 +1,12 @@
-# Welcome to SlideDown
+# Welcome to MarkDeck
 
 A lightweight markdown presentation tool
 
 ---
 
-## What is SlideDown?
+## What is MarkDeck?
 
-SlideDown is a simple, fast, and beautiful way to create presentations using Markdown.
+MarkDeck is a simple, fast, and beautiful way to create presentations using Markdown.
 
 - Write slides in plain text
 - No complex software needed
@@ -33,7 +33,7 @@ More content
 Then run:
 
 ```bash
-slidedown present my-slides.md
+markdeck present my-slides.md
 ```
 
 ---
@@ -105,7 +105,7 @@ You can include images:
 
 ![Markdown Logo](https://markdown-here.com/img/icon256.png)
 
-And links: [Visit SlideDown on GitHub](https://github.com)
+And links: [Visit MarkDeck on GitHub](https://github.com)
 
 ---
 
@@ -119,6 +119,6 @@ And links: [Visit SlideDown on GitHub](https://github.com)
 
 ## Thank You!
 
-Start creating amazing presentations with SlideDown today.
+Start creating amazing presentations with MarkDeck today.
 
 Press `?` for help or `Esc` to exit fullscreen.

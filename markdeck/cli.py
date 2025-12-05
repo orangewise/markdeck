@@ -1,4 +1,4 @@
-"""Command-line interface for SlideDown."""
+"""Command-line interface for MarkDeck."""
 
 import sys
 import webbrowser
@@ -7,17 +7,17 @@ from pathlib import Path
 import click
 import uvicorn
 
-from slidedown import __version__
-from slidedown.server import app, enable_watch_mode, set_presentation_file
+from markdeck import __version__
+from markdeck.server import app, enable_watch_mode, set_presentation_file
 
 
 @click.group(invoke_without_command=True)
 @click.option('--version', is_flag=True, help='Show version and exit')
 @click.pass_context
 def main(ctx, version):
-    """SlideDown - A lightweight markdown presentation tool."""
+    """MarkDeck - A lightweight markdown presentation tool."""
     if version:
-        click.echo(f"SlideDown version {__version__}")
+        click.echo(f"MarkDeck version {__version__}")
         sys.exit(0)
     elif ctx.invoked_subcommand is None:
         click.echo(ctx.get_help())
@@ -33,7 +33,7 @@ def present(file: Path, port: int, host: str, no_browser: bool, watch: bool):
     """
     Start presenting a markdown file.
 
-    Example: slidedown present my-slides.md
+    Example: markdeck present my-slides.md
     """
     # Validate file
     if not file.exists():
@@ -55,7 +55,7 @@ def present(file: Path, port: int, host: str, no_browser: bool, watch: bool):
     # Build URL
     url = f"http://{host}:{port}"
 
-    click.echo("Starting SlideDown server...")
+    click.echo("Starting MarkDeck server...")
     click.echo(f"Presenting: {file.name}")
     click.echo(f"URL: {url}")
     click.echo("\nPress Ctrl+C to stop the server")
@@ -102,13 +102,13 @@ def present(file: Path, port: int, host: str, no_browser: bool, watch: bool):
                 access_log=False,
             )
     except KeyboardInterrupt:
-        click.echo("\n\nShutting down SlideDown server...")
+        click.echo("\n\nShutting down MarkDeck server...")
         sys.exit(0)
 
 
 async def _watch_file_async(file_path: Path):
     """Watch file for changes in async context."""
-    from slidedown.watcher import watch_file
+    from markdeck.watcher import watch_file
 
     await watch_file(file_path)
 
@@ -120,7 +120,7 @@ def init(filename: Path, title: str):
     """
     Create a new presentation from a template.
 
-    Example: slidedown init my-presentation.md
+    Example: markdeck init my-presentation.md
     """
     if filename.exists():
         click.confirm(f"File {filename} already exists. Overwrite?", abort=True)
@@ -135,7 +135,7 @@ Your presentation subtitle or tagline
 
 ## About This Presentation
 
-This is a sample slide created by SlideDown.
+This is a sample slide created by MarkDeck.
 
 - Edit this file to create your presentation
 - Separate slides with `---`
@@ -156,8 +156,8 @@ This is a sample slide created by SlideDown.
 You can include code blocks with syntax highlighting:
 
 ```python
-def hello_slidedown():
-    print("Hello from SlideDown!")
+def hello_markdeck():
+    print("Hello from MarkDeck!")
     return "Awesome presentations"
 ```
 
@@ -194,7 +194,7 @@ Press `?` to see all available shortcuts
 Start creating your presentation now:
 
 ```bash
-slidedown present {filename.name}
+markdeck present {filename.name}
 ```
 
 Visit the documentation for more features!
@@ -203,7 +203,7 @@ Visit the documentation for more features!
     filename.write_text(template, encoding='utf-8')
     click.echo(f"Created presentation: {filename}")
     click.echo("\nStart presenting with:")
-    click.echo(f"  slidedown present {filename}")
+    click.echo(f"  markdeck present {filename}")
 
 
 @main.command()
@@ -212,9 +212,9 @@ def validate(file: Path):
     """
     Validate a markdown presentation file.
 
-    Example: slidedown validate my-slides.md
+    Example: markdeck validate my-slides.md
     """
-    from slidedown.parser import SlideParser
+    from markdeck.parser import SlideParser
 
     try:
         parser = SlideParser(file)

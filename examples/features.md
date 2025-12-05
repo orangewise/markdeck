@@ -1,4 +1,4 @@
-# SlideDown Features
+# MarkDeck Features
 
 Comprehensive feature showcase
 
@@ -66,7 +66,7 @@ HAVING order_count > 5;
 
 ## Complex Tables
 
-| Feature | SlideDown | PowerPoint | Google Slides |
+| Feature | MarkDeck | PowerPoint | Google Slides |
 |---------|-----------|------------|---------------|
 | Markdown | ✓ | ✗ | ✗ |
 | Version Control | ✓ | ✗ | ✗ |
@@ -172,7 +172,7 @@ You'll be able to split slides into columns:
 
 ## Performance
 
-SlideDown is designed to be:
+MarkDeck is designed to be:
 
 - **Fast**: Minimal JavaScript, no heavy frameworks
 - **Lightweight**: Small bundle size
@@ -219,7 +219,7 @@ Perfect for:
 
 ## Open Source
 
-SlideDown is open source (MIT License).
+MarkDeck is open source (MIT License).
 
 Contributions welcome:
 - Bug reports
@@ -231,6 +231,6 @@ Contributions welcome:
 
 ## Thank You!
 
-Try SlideDown for your next presentation.
+Try MarkDeck for your next presentation.
 
 Press 'S' to see speaker notes throughout this deck.

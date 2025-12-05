@@ -1,4 +1,4 @@
-"""FastAPI server for SlideDown presentation viewer."""
+"""FastAPI server for MarkDeck presentation viewer."""
 
 from pathlib import Path
 from typing import Any
@@ -7,9 +7,9 @@ from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
-from slidedown.parser import SlideParser
+from markdeck.parser import SlideParser
 
-app = FastAPI(title="SlideDown", description="Markdown presentation tool")
+app = FastAPI(title="MarkDeck", description="Markdown presentation tool")
 
 # Global variable to store the current presentation file
 _current_file: Path | None = None

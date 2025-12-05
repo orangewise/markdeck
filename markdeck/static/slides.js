@@ -1,4 +1,4 @@
-// SlideDown presentation viewer
+// MarkDeck presentation viewer
 class SlideShow {
     constructor() {
         this.slides = [];
@@ -79,7 +79,7 @@ class SlideShow {
             throw new Error('No slides found in presentation');
         }
 
-        document.title = `${this.title} - SlideDown`;
+        document.title = `${this.title} - MarkDeck`;
         this.elements.totalSlidesEl.textContent = this.totalSlides;
     }
 

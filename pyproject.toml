@@ -1,5 +1,5 @@
 [project]
-name = "slidedown"
+name = "markdeck"
 version = "0.1.0"
 description = "A lightweight markdown presentation tool"
 readme = "README.md"
@@ -34,7 +34,7 @@ dev = [
 ]
 
 [project.scripts]
-slidedown = "slidedown.cli:main"
+markdeck = "markdeck.cli:main"
 
 [build-system]
 requires = ["hatchling"]
