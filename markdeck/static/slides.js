@@ -5,15 +5,12 @@ class SlideShow {
         this.currentSlideIndex = 0;
         this.totalSlides = 0;
         this.title = '';
-        this.showingNotes = false;
         this.isFullscreen = false;
 
         this.elements = {
             loading: document.getElementById('loading'),
             presentation: document.getElementById('presentation'),
             slideContent: document.getElementById('slide-content'),
-            speakerNotes: document.getElementById('speaker-notes'),
-            notesContent: document.getElementById('notes-content'),
             currentSlide: document.getElementById('current-slide'),
             totalSlidesEl: document.getElementById('total-slides'),
             progressFill: document.getElementById('progress-fill'),
@@ -217,10 +214,6 @@ class SlideShow {
             case 'F':
                 this.toggleFullscreen();
                 break;
-            case 's':
-            case 'S':
-                this.toggleSpeakerNotes();
-                break;
             case '?':
                 this.toggleHelp();
                 break;
@@ -250,12 +243,18 @@ class SlideShow {
             hljs.highlightElement(block);
         });
 
-        // Update speaker notes
+        // Log speaker notes to console for presenter
+        console.clear();
+        console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'color: #4a9eff');
+        console.log(`%cSlide ${index + 1} / ${this.totalSlides}`, 'color: #4a9eff; font-size: 16px; font-weight: bold');
+        console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'color: #4a9eff');
         if (slide.notes) {
-            this.elements.notesContent.innerHTML = marked.parse(slide.notes);
+            console.log('%cSPEAKER NOTES:', 'color: #6bb6ff; font-weight: bold; font-size: 14px');
+            console.log(slide.notes);
         } else {
-            this.elements.notesContent.innerHTML = '<em>No notes for this slide</em>';
+            console.log('%c(No speaker notes for this slide)', 'color: #808080; font-style: italic');
         }
+        console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'color: #4a9eff');
 
         // Update progress indicator
         this.elements.currentSlide.textContent = index + 1;
@@ -280,11 +279,6 @@ class SlideShow {
 
     goToSlide(index) {
         this.showSlide(index);
-    }
-
-    toggleSpeakerNotes() {
-        this.showingNotes = !this.showingNotes;
-        this.elements.speakerNotes.classList.toggle('hidden', !this.showingNotes);
     }
 
     toggleFullscreen() {

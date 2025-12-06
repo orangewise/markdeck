@@ -169,26 +169,6 @@ body {
     text-decoration: underline;
 }
 
-/* Speaker notes */
-.speaker-notes {
-    background: #252525;
-    border-top: 2px solid var(--border-color);
-    padding: 20px 60px;
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.speaker-notes h3 {
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-    color: var(--accent-color);
-}
-
-.speaker-notes #notes-content {
-    font-size: 1rem;
-    color: #c0c0c0;
-}
-
 /* Progress indicator */
 .progress {
     position: fixed;
