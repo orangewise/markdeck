@@ -3,9 +3,11 @@
 from pathlib import Path
 from typing import Any
 
+import click
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
 
 from markdeck.parser import SlideParser
 
@@ -145,3 +147,55 @@ async def watch_enabled() -> dict[str, bool]:
         Dictionary with watch_enabled status
     """
     return {"watch_enabled": _watch_enabled}
+
+
+class SlideNotification(BaseModel):
+    """Request model for slide navigation notification."""
+
+    slide_index: int
+
+
+@app.post("/api/log-notes")
+async def log_speaker_notes(notification: SlideNotification) -> dict[str, str]:
+    """
+    Log speaker notes for the current slide to the server terminal.
+
+    Args:
+        notification: Slide index notification
+
+    Returns:
+        Success message
+    """
+    if not _current_file:
+        raise HTTPException(status_code=400, detail="No presentation file loaded")
+
+    try:
+        parser = SlideParser(_current_file)
+        slides = parser.parse()
+
+        if notification.slide_index < 0 or notification.slide_index >= len(slides):
+            raise HTTPException(status_code=400, detail="Invalid slide index")
+
+        slide = slides[notification.slide_index]
+
+        # Log to terminal with formatting
+        click.echo(click.style("━" * 60, fg="blue"))
+        click.echo(
+            click.style(
+                f"Slide {notification.slide_index + 1} / {len(slides)}", fg="blue", bold=True
+            )
+        )
+        click.echo(click.style("━" * 60, fg="blue"))
+
+        if slide.notes:
+            click.echo(click.style("SPEAKER NOTES:", fg="cyan", bold=True))
+            click.echo(slide.notes)
+        else:
+            click.echo(click.style("(No speaker notes for this slide)", fg="bright_black", italic=True))
+
+        click.echo(click.style("━" * 60, fg="blue"))
+
+        return {"status": "ok"}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error logging notes: {str(e)}")

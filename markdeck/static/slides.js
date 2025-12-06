@@ -243,18 +243,8 @@ class SlideShow {
             hljs.highlightElement(block);
         });
 
-        // Log speaker notes to console for presenter
-        console.clear();
-        console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'color: #4a9eff');
-        console.log(`%cSlide ${index + 1} / ${this.totalSlides}`, 'color: #4a9eff; font-size: 16px; font-weight: bold');
-        console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'color: #4a9eff');
-        if (slide.notes) {
-            console.log('%cSPEAKER NOTES:', 'color: #6bb6ff; font-weight: bold; font-size: 14px');
-            console.log(slide.notes);
-        } else {
-            console.log('%c(No speaker notes for this slide)', 'color: #808080; font-style: italic');
-        }
-        console.log('%c━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'color: #4a9eff');
+        // Notify server to log speaker notes to terminal
+        this.notifySlideChange(index);
 
         // Update progress indicator
         this.elements.currentSlide.textContent = index + 1;
@@ -263,6 +253,21 @@ class SlideShow {
 
         // Scroll to top of slide
         this.elements.slideContent.scrollTop = 0;
+    }
+
+    async notifySlideChange(index) {
+        try {
+            await fetch('/api/log-notes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ slide_index: index }),
+            });
+        } catch (error) {
+            // Silently fail - don't interrupt presentation
+            console.error('Failed to notify server of slide change:', error);
+        }
     }
 
     nextSlide() {
