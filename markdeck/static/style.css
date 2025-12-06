@@ -169,6 +169,21 @@ body {
     text-decoration: underline;
 }
 
+/* Mermaid diagrams */
+.slide-content .mermaid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+    padding: 1rem;
+    background: transparent;
+}
+
+.slide-content .mermaid svg {
+    max-width: 100%;
+    height: auto;
+}
+
 /* Speaker notes */
 .speaker-notes {
     background: #252525;
