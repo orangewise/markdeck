@@ -5,7 +5,7 @@ from typing import Any
 
 import click
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -63,6 +63,38 @@ def get_static_dir() -> Path:
 
 # Mount static files
 app.mount("/static", StaticFiles(directory=get_static_dir()), name="static")
+
+
+@app.get("/assets/{file_path:path}")
+async def serve_asset(file_path: str) -> FileResponse:
+    """
+    Serve assets (images, etc.) from the presentation's directory.
+
+    Args:
+        file_path: Relative path to the asset file
+
+    Returns:
+        The requested file
+    """
+    if not _current_file:
+        raise HTTPException(status_code=400, detail="No presentation file loaded")
+
+    # Get the directory containing the presentation file
+    presentation_dir = _current_file.parent
+
+    # Resolve the asset path relative to the presentation directory
+    asset_path = (presentation_dir / file_path).resolve()
+
+    # Security check: ensure the resolved path is within the presentation directory
+    try:
+        asset_path.relative_to(presentation_dir.resolve())
+    except ValueError:
+        raise HTTPException(status_code=403, detail="Access denied")
+
+    if not asset_path.exists():
+        raise HTTPException(status_code=404, detail=f"Asset not found: {file_path}")
+
+    return FileResponse(asset_path)
 
 
 @app.get("/", response_class=HTMLResponse)

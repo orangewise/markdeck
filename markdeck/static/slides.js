@@ -10,6 +10,7 @@ class SlideShow {
         this.elements = {
             loading: document.getElementById('loading'),
             presentation: document.getElementById('presentation'),
+            slideContainer: document.getElementById('slide-container'),
             slideContent: document.getElementById('slide-content'),
             currentSlide: document.getElementById('current-slide'),
             totalSlidesEl: document.getElementById('total-slides'),
@@ -254,10 +255,33 @@ class SlideShow {
         // Render markdown
         this.elements.slideContent.innerHTML = marked.parse(slide.content);
 
+        // Rewrite relative image paths to use /assets/ endpoint
+        this.elements.slideContent.querySelectorAll('img').forEach((img) => {
+            const src = img.getAttribute('src');
+            if (src && !src.startsWith('http://') && !src.startsWith('https://') && !src.startsWith('//') && !src.startsWith('/')) {
+                // Remove leading ./ if present
+                const cleanPath = src.startsWith('./') ? src.slice(2) : src;
+                img.setAttribute('src', '/assets/' + cleanPath);
+            }
+        });
+
         // Apply syntax highlighting to code blocks
         this.elements.slideContent.querySelectorAll('pre code').forEach((block) => {
             hljs.highlightElement(block);
         });
+
+        // Render math equations with KaTeX
+        if (window.renderMathInElement) {
+            renderMathInElement(this.elements.slideContent, {
+                delimiters: [
+                    { left: '$$', right: '$$', display: true },
+                    { left: '$', right: '$', display: false },
+                    { left: '\\[', right: '\\]', display: true },
+                    { left: '\\(', right: '\\)', display: false }
+                ],
+                throwOnError: false
+            });
+        }
 
         // Render mermaid diagrams if present
         const mermaidElements = this.elements.slideContent.querySelectorAll('.mermaid');
@@ -280,7 +304,7 @@ class SlideShow {
         this.elements.progressFill.style.width = `${progressPercent}%`;
 
         // Scroll to top of slide
-        this.elements.slideContent.scrollTop = 0;
+        this.elements.slideContainer.scrollTop = 0;
     }
 
     async notifySlideChange(index) {

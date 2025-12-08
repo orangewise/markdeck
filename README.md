@@ -12,9 +12,10 @@ A lightweight, markdown-based presentation tool that runs locally.
 - **🔥 Hot Reload**: Automatically refreshes when you edit your markdown file (with `--watch`)
 - **🎨 Beautiful Design**: Modern, distraction-free presentation interface
 - **⌨️ Keyboard Shortcuts**: Navigate efficiently with keyboard controls
-- **💬 Speaker Notes**: Hidden notes visible in speaker view
+- **💬 Speaker Notes**: Hidden notes visible in terminal
 - **🎯 Syntax Highlighting**: Beautiful code blocks powered by highlight.js
 - **📊 Mermaid Diagrams**: Create flowcharts, sequence diagrams, and more with Mermaid.js
+- **🔢 Math Equations**: LaTeX-style math rendering powered by KaTeX
 - **📱 Responsive**: Works on different screen sizes
 - **🔧 Easy Setup**: Simple CLI interface, no complex configuration
 
@@ -71,12 +72,21 @@ echo "# Hello MarkDeck
 
 Start creating your own presentations!" > test.md
 
-# Run directly from GitHub (no installation needed)
+# Run directly from a GitHub branch (no installation needed)
 uvx --from git+https://github.com/orangewise/markdeck.git@claude/init-markdeck-project-01DJeHxbuthmNtDFjgxToFrP markdeck present test.md
 
 # Or use the main branch
 uvx --from git+https://github.com/orangewise/markdeck.git markdeck present test.md
 ```
+
+### Prune uv to clear caches
+
+```
+uv cache prune --force
+uv cache clean markdeck
+uvx . present examples/features.md --watch
+```
+
 
 ### Create Your First Presentation
 
