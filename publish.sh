@@ -40,7 +40,7 @@ rm -rf dist/ build/ *.egg-info
 
 # Run tests
 echo "🧪 Running tests..."
-python -m pytest tests/ -v
+./test.sh
 if [ $? -ne 0 ]; then
     echo "❌ Tests failed. Please fix before publishing."
     exit 1
