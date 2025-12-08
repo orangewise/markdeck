@@ -260,6 +260,19 @@ class SlideShow {
             hljs.highlightElement(block);
         });
 
+        // Render math equations with KaTeX
+        if (window.renderMathInElement) {
+            renderMathInElement(this.elements.slideContent, {
+                delimiters: [
+                    { left: '$$', right: '$$', display: true },
+                    { left: '$', right: '$', display: false },
+                    { left: '\\[', right: '\\]', display: true },
+                    { left: '\\(', right: '\\)', display: false }
+                ],
+                throwOnError: false
+            });
+        }
+
         // Render mermaid diagrams if present
         const mermaidElements = this.elements.slideContent.querySelectorAll('.mermaid');
         if (mermaidElements.length > 0 && window.mermaid) {
