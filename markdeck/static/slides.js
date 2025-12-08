@@ -10,6 +10,7 @@ class SlideShow {
         this.elements = {
             loading: document.getElementById('loading'),
             presentation: document.getElementById('presentation'),
+            slideContainer: document.getElementById('slide-container'),
             slideContent: document.getElementById('slide-content'),
             currentSlide: document.getElementById('current-slide'),
             totalSlidesEl: document.getElementById('total-slides'),
@@ -280,7 +281,7 @@ class SlideShow {
         this.elements.progressFill.style.width = `${progressPercent}%`;
 
         // Scroll to top of slide
-        this.elements.slideContent.scrollTop = 0;
+        this.elements.slideContainer.scrollTop = 0;
     }
 
     async notifySlideChange(index) {
