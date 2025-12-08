@@ -165,13 +165,12 @@ def hello_markdeck():
 
 ## Speaker Notes
 
-You can add speaker notes that are hidden by default.
-
-Press 'S' to toggle speaker notes view.
+You can add speaker notes that only appear in the terminal where you run markdeck.
 
 <!--NOTES:
 These are speaker notes.
-They won't appear on the slide but you can view them in speaker mode.
+They will appear in the terminal when you navigate to this slide.
+The audience won't see them in the browser presentation.
 -->
 
 ---
@@ -185,7 +184,6 @@ Press `?` to see all available shortcuts
 | → / Space | Next slide |
 | ← | Previous slide |
 | F | Fullscreen |
-| S | Speaker notes |
 
 ---
 

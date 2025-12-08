@@ -157,7 +157,7 @@ This content is visible to the audience.
 
 <!--NOTES:
 These are speaker notes.
-Press 'S' to toggle speaker notes view.
+They will appear in the terminal where you run markdeck.
 -->
 ```
 
@@ -170,7 +170,6 @@ Press 'S' to toggle speaker notes view.
 | `Home` | First slide |
 | `End` | Last slide |
 | `F` | Toggle fullscreen |
-| `S` | Toggle speaker notes |
 | `?` | Show help |
 | `Esc` | Exit fullscreen/help |
 

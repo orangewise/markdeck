@@ -8,10 +8,10 @@ Comprehensive feature showcase
 
 This slide demonstrates speaker notes functionality.
 
-Press 'S' to toggle speaker notes view.
+Speaker notes appear in the terminal where you run markdeck.
 
 <!--NOTES:
-These are speaker notes. They are hidden from the main presentation view but visible when you press 'S'.
+These are speaker notes. They appear in the terminal where you run markdeck, not in the browser.
 
 Use speaker notes to:
 - Remember key points
@@ -233,4 +233,4 @@ Contributions welcome:
 
 Try MarkDeck for your next presentation.
 
-Press 'S' to see speaker notes throughout this deck.
+Check your terminal to see speaker notes throughout this deck.

@@ -5,15 +5,12 @@ class SlideShow {
         this.currentSlideIndex = 0;
         this.totalSlides = 0;
         this.title = '';
-        this.showingNotes = false;
         this.isFullscreen = false;
 
         this.elements = {
             loading: document.getElementById('loading'),
             presentation: document.getElementById('presentation'),
             slideContent: document.getElementById('slide-content'),
-            speakerNotes: document.getElementById('speaker-notes'),
-            notesContent: document.getElementById('notes-content'),
             currentSlide: document.getElementById('current-slide'),
             totalSlidesEl: document.getElementById('total-slides'),
             progressFill: document.getElementById('progress-fill'),
@@ -233,10 +230,6 @@ class SlideShow {
             case 'F':
                 this.toggleFullscreen();
                 break;
-            case 's':
-            case 'S':
-                this.toggleSpeakerNotes();
-                break;
             case '?':
                 this.toggleHelp();
                 break;
@@ -278,12 +271,8 @@ class SlideShow {
             });
         }
 
-        // Update speaker notes
-        if (slide.notes) {
-            this.elements.notesContent.innerHTML = marked.parse(slide.notes);
-        } else {
-            this.elements.notesContent.innerHTML = '<em>No notes for this slide</em>';
-        }
+        // Notify server to log speaker notes to terminal
+        this.notifySlideChange(index);
 
         // Update progress indicator
         this.elements.currentSlide.textContent = index + 1;
@@ -292,6 +281,21 @@ class SlideShow {
 
         // Scroll to top of slide
         this.elements.slideContent.scrollTop = 0;
+    }
+
+    async notifySlideChange(index) {
+        try {
+            await fetch('/api/log-notes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ slide_index: index }),
+            });
+        } catch (error) {
+            // Silently fail - don't interrupt presentation
+            console.error('Failed to notify server of slide change:', error);
+        }
     }
 
     nextSlide() {
@@ -308,11 +312,6 @@ class SlideShow {
 
     goToSlide(index) {
         this.showSlide(index);
-    }
-
-    toggleSpeakerNotes() {
-        this.showingNotes = !this.showingNotes;
-        this.elements.speakerNotes.classList.toggle('hidden', !this.showingNotes);
     }
 
     toggleFullscreen() {
