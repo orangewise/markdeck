@@ -14,6 +14,7 @@ A lightweight, markdown-based presentation tool that runs locally.
 - **⌨️ Keyboard Shortcuts**: Navigate efficiently with keyboard controls
 - **💬 Speaker Notes**: Hidden notes visible in speaker view
 - **🎯 Syntax Highlighting**: Beautiful code blocks powered by highlight.js
+- **📊 Mermaid Diagrams**: Create flowcharts, sequence diagrams, and more with Mermaid.js
 - **📱 Responsive**: Works on different screen sizes
 - **🔧 Easy Setup**: Simple CLI interface, no complex configuration
 
@@ -251,6 +252,32 @@ These notes are only visible when you press 'S'
 -->
 ```
 
+### Mermaid Diagrams
+
+MarkDeck supports Mermaid diagrams for visualizing concepts, workflows, and architecture:
+
+````markdown
+```mermaid
+graph TD
+    A[Start] --> B{Is it working?}
+    B -->|Yes| C[Great!]
+    B -->|No| D[Debug]
+    D --> B
+    C --> E[End]
+```
+````
+
+**Supported diagram types:**
+- Flowcharts (`graph`, `flowchart`)
+- Sequence diagrams (`sequenceDiagram`)
+- Class diagrams (`classDiagram`)
+- State diagrams (`stateDiagram-v2`)
+- Git graphs (`gitGraph`)
+- Pie charts (`pie`)
+- And many more!
+
+Diagrams render with a dark theme that matches MarkDeck's interface and scale responsively to fit your slides.
+
 ### Hot Reload
 
 MarkDeck includes hot reload functionality for a seamless development experience:
@@ -326,6 +353,7 @@ Check out the `examples/` directory for sample presentations:
 - **demo.md**: Basic introduction to MarkDeck
 - **features.md**: Comprehensive feature showcase
 - **code-examples.md**: Syntax highlighting demo
+- **mermaid-test.md**: Mermaid diagram examples
 
 Try them out:
 
@@ -333,6 +361,7 @@ Try them out:
 markdeck present examples/demo.md
 markdeck present examples/features.md
 markdeck present examples/code-examples.md
+markdeck present examples/mermaid-test.md
 ```
 
 ## 🗺️ Roadmap
@@ -383,6 +412,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [FastAPI](https://fastapi.tiangolo.com/) - Modern web framework
 - [marked.js](https://marked.js.org/) - Markdown parser
 - [highlight.js](https://highlightjs.org/) - Syntax highlighting
+- [Mermaid.js](https://mermaid.js.org/) - Diagram and flowchart generation
 - [Python-Markdown](https://python-markdown.github.io/) - Server-side markdown parsing
 
 ## 📞 Support

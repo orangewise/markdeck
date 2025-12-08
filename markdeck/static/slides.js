@@ -28,11 +28,27 @@ class SlideShow {
 
     async init() {
         try {
-            // Configure marked.js
+            // Configure marked.js with custom renderer for mermaid diagrams
+            const renderer = new marked.Renderer();
+            const originalCode = renderer.code.bind(renderer);
+
+            renderer.code = function(code, language) {
+                if (language === 'mermaid') {
+                    // Create a unique ID for this diagram
+                    const id = 'mermaid-' + Math.random().toString(36).substr(2, 9);
+                    return `<div class="mermaid" id="${id}">${code}</div>`;
+                }
+                return originalCode(code, language);
+            };
+
             marked.setOptions({
                 breaks: true,
                 gfm: true,
+                renderer: renderer,
                 highlight: function(code, lang) {
+                    if (lang === 'mermaid') {
+                        return code; // Don't highlight mermaid code
+                    }
                     if (lang && hljs.getLanguage(lang)) {
                         try {
                             return hljs.highlight(code, { language: lang }).value;
@@ -249,6 +265,18 @@ class SlideShow {
         this.elements.slideContent.querySelectorAll('pre code').forEach((block) => {
             hljs.highlightElement(block);
         });
+
+        // Render mermaid diagrams if present
+        const mermaidElements = this.elements.slideContent.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0 && window.mermaid) {
+            // Run mermaid on all diagrams in the current slide
+            mermaidElements.forEach((element) => {
+                element.removeAttribute('data-processed');
+            });
+            window.mermaid.run({
+                nodes: mermaidElements
+            });
+        }
 
         // Update speaker notes
         if (slide.notes) {
