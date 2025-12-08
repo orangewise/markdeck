@@ -1,6 +1,59 @@
-# MarkDeck Features
+# MarkDeck
 
-Comprehensive feature showcase
+A lightweight markdown presentation tool
+
+---
+
+## What is MarkDeck?
+
+MarkDeck is a simple, fast, and beautiful way to create presentations using Markdown.
+
+- Write slides in plain text
+- No complex software needed
+- Focus on content, not formatting
+
+---
+
+## Getting Started
+
+Create a markdown file with slides separated by `---`:
+
+<table>
+  <tr>
+    <th>MarkDown</th>
+    <th>Result</th>
+  </tr>
+  <tr>
+    <td rowspan="2"><img src="./images/markdown.png" alt="markdown"></td>
+    <td><img src="./images/slide1.png" alt="slide1"></td>
+  </tr>
+  <tr>
+    <td><img src="./images/slide2.png" alt="slide2"></td>
+  </tr>
+</table>
+
+---
+
+## Key Features
+
+- **Markdown-based**: Use familiar syntax
+- **Fast**: Lightweight and responsive
+- **Keyboard shortcuts**: Navigate with ease
+- **Syntax highlighting**: Beautiful code blocks
+- **Speaker notes**: Hidden notes for presenters
+
+---
+
+## Keyboard Navigation
+
+| Key | Action |
+|-----|--------|
+| → / Space | Next slide |
+| ← | Previous slide |
+| Home | First slide |
+| End | Last slide |
+| F | Fullscreen |
+| ? | Help |
 
 ---
 
@@ -19,6 +72,16 @@ Use speaker notes to:
 - Keep timing notes
 - Store additional context
 -->
+
+---
+
+## Images and Links
+
+You can include images:
+
+![Markdown Logo](https://markdown-here.com/img/icon256.png)
+
+And links: [Visit MarkDeck on GitHub](https://github.com)
 
 ---
 
@@ -93,17 +156,19 @@ You can also combine them: **bold with `code`** and *italic with `code`*.
 
 > Multi-paragraph quotes work too.
 >
-> Just add blank lines between paragraphs within the quote block.
+> Just add a blank `>` line between paragraphs within the quote block.
+>
+> This is the third paragraph of this blockquote.
 
 ---
 
-## Horizontal Rules
+## Slide Delimiters
 
-Content above
+In MarkDeck, `---` is used to separate slides.
 
----
+**Note**: The slide delimiter `---` must be on its own line with blank lines before and after.
 
-**Note**: The slide delimiter `---` must be on its own line with newlines before and after.
+Because of this, you cannot use `---` as a horizontal rule within a slide — it will always create a new slide instead.
 
 ---
 
@@ -123,39 +188,120 @@ Complex nested structure:
 
 ---
 
-## Definition Lists (via Markdown)
+## Math Equations
 
-**Term 1**
-: Definition of term 1
+MarkDeck supports math equations using KaTeX:
 
-**Term 2**
-: Definition of term 2
-: Alternative definition
+**Inline math**: The famous equation $E = mc^2$ changed physics forever.
 
-**Term 3**
-: Another definition
+**Display math** (centered on its own line):
 
----
+$$\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}$$
 
-## Math (Future Feature)
-
-In future versions, we plan to support math equations:
-
-- Inline math: E = mc²
-- Display math equations
-- Chemical formulas
-- Complex expressions
+**More examples**: $\sum_{i=1}^{n} i = \frac{n(n+1)}{2}$ and $\sqrt{a^2 + b^2}$
 
 ---
 
-## Mermaid Diagrams (Future)
+# Mermaid Diagrams
 
-Future support for diagrams:
+- FlowCharts
+- Sequence Diagrams
+- Class Diagrams
+- Git Graphs
+- Pie Charts
+- State Diagrams
 
-- Flowcharts
-- Sequence diagrams
-- Gantt charts
-- Class diagrams
+---
+
+## Mermaid Flowchart Example
+
+```mermaid
+graph TD
+    A[Start] --> B{Is it working?}
+    B -->|Yes| C[Great!]
+    B -->|No| D[Debug]
+    D --> B
+    C --> E[End]
+```
+
+---
+
+## Mermaid Sequence Diagram
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Browser
+    participant Server
+    User->>Browser: Open presentation
+    Browser->>Server: Request slides
+    Server-->>Browser: Return slides
+    Browser->>Browser: Render markdown
+    Browser->>Browser: Render mermaid
+    Browser-->>User: Display presentation
+```
+
+---
+
+## Mermaid Class Diagram
+
+```mermaid
+classDiagram
+    class SlideShow {
+        +slides[]
+        +currentSlideIndex
+        +init()
+        +showSlide()
+        +nextSlide()
+    }
+    class Slide {
+        +content
+        +notes
+    }
+    SlideShow --> Slide
+```
+
+---
+
+## Mermaid Git Graph
+
+```mermaid
+gitGraph
+    commit
+    commit
+    branch develop
+    checkout develop
+    commit
+    commit
+    checkout main
+    merge develop
+    commit
+```
+
+---
+
+## Mermaid Pie Chart
+
+```mermaid
+pie title Language Distribution
+    "JavaScript" : 45
+    "Python" : 30
+    "HTML/CSS" : 15
+    "Other" : 10
+```
+
+---
+
+## Mermaid State Diagram
+
+```mermaid
+stateDiagram-v2
+    [*] --> Loading
+    Loading --> Loaded
+    Loaded --> Presenting
+    Presenting --> Presenting: Next/Previous
+    Presenting --> [*]
+```
 
 ---
 
@@ -178,6 +324,8 @@ MarkDeck is designed to be:
 - **Lightweight**: Small bundle size
 - **Efficient**: Smooth navigation even with 100+ slides
 - **Responsive**: Works on different screen sizes
+- **Hot Reloads**: Use the `--watch` flag
+- **Speaker Notes**: Check speaker notes in the terminal
 
 ---
 
@@ -190,17 +338,6 @@ Future customization features:
 - Font choices
 - Transition effects
 - Layout templates
-
----
-
-## Export Options (Planned)
-
-Planned export formats:
-
-- PDF (via print)
-- Standalone HTML
-- PowerPoint (maybe)
-- PNG images
 
 ---
 
@@ -232,5 +369,3 @@ Contributions welcome:
 ## Thank You!
 
 Try MarkDeck for your next presentation.
-
-Check your terminal to see speaker notes throughout this deck.

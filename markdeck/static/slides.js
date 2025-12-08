@@ -255,6 +255,16 @@ class SlideShow {
         // Render markdown
         this.elements.slideContent.innerHTML = marked.parse(slide.content);
 
+        // Rewrite relative image paths to use /assets/ endpoint
+        this.elements.slideContent.querySelectorAll('img').forEach((img) => {
+            const src = img.getAttribute('src');
+            if (src && !src.startsWith('http://') && !src.startsWith('https://') && !src.startsWith('//') && !src.startsWith('/')) {
+                // Remove leading ./ if present
+                const cleanPath = src.startsWith('./') ? src.slice(2) : src;
+                img.setAttribute('src', '/assets/' + cleanPath);
+            }
+        });
+
         // Apply syntax highlighting to code blocks
         this.elements.slideContent.querySelectorAll('pre code').forEach((block) => {
             hljs.highlightElement(block);
