@@ -46,3 +46,6 @@ Thumbs.db
 # Project specific
 *.log
 .markdeck.yml
+
+# Beads (AI task tracking - stealth mode)
+.beads/

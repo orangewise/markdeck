@@ -355,6 +355,29 @@ ruff check markdeck/ tests/
 ruff format markdeck/ tests/
 ```
 
+### AI-Assisted Development
+
+For AI-assisted development, you can install [Beads](https://github.com/steveyegge/beads), a distributed, git-backed issue tracking system designed specifically for AI coding agents:
+
+```bash
+# Install and initialize Beads
+./install-beads.sh
+```
+
+This script will:
+- Automatically detect and use your available package manager (npm, Homebrew, or Go)
+- Install Beads globally on your system
+- Initialize Beads in stealth mode for local use (keeps `.beads/` in `.gitignore`)
+
+Once installed, you can use Beads for structured task management:
+
+```bash
+bd ready              # View tasks without blockers
+bd create "Title"     # Create a new task
+bd show <id>          # Show task details
+bd quickstart         # Interactive guide for AI agents
+```
+
 ## 📚 Examples
 
 Check out the `examples/` directory for sample presentations:
