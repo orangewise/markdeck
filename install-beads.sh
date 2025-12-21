@@ -79,14 +79,14 @@ if [ "$INSTALLED" = true ]; then
         bd --version || echo "Beads command 'bd' is available"
         echo ""
 
-        # Initialize Beads in stealth mode
-        echo "🚀 Initializing Beads in stealth mode for this project..."
-        echo "   (Stealth mode keeps .beads/ in .gitignore for local use only)"
+        # Initialize Beads
+        echo "🚀 Initializing Beads for this project..."
+        echo "   (Task data will be stored in .beads/ and committed to git)"
         echo ""
 
-        if bd init --stealth; then
+        if bd init; then
             echo ""
-            echo "✅ Beads initialized successfully in stealth mode!"
+            echo "✅ Beads initialized successfully!"
         else
             echo ""
             echo "ℹ️  Beads may already be initialized. Run 'bd --help' for usage."

@@ -367,7 +367,7 @@ For AI-assisted development, you can install [Beads](https://github.com/steveyeg
 This script will:
 - Automatically detect and use your available package manager (npm, Homebrew, or Go)
 - Install Beads globally on your system
-- Initialize Beads in stealth mode for local use (keeps `.beads/` in `.gitignore`)
+- Initialize Beads for the project (task data stored in `.beads/` and committed to git)
 
 Once installed, you can use Beads for structured task management:
 
