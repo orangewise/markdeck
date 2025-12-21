@@ -423,6 +423,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [highlight.js](https://highlightjs.org/) - Syntax highlighting
 - [Mermaid.js](https://mermaid.js.org/) - Diagram and flowchart generation
 - [Python-Markdown](https://python-markdown.github.io/) - Server-side markdown parsing
+- [Beads](https://github.com/steveyegge/beads) - Distributed, git-backed issue tracking system for AI coding agents
 
 ## 📞 Support
 
