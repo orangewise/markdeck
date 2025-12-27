@@ -15,6 +15,9 @@ class SlideShow {
             currentSlide: document.getElementById('current-slide'),
             totalSlidesEl: document.getElementById('total-slides'),
             progressFill: document.getElementById('progress-fill'),
+            gridOverlay: document.getElementById('grid-overlay'),
+            gridContainer: document.getElementById('grid-container'),
+            closeGrid: document.getElementById('close-grid'),
             helpOverlay: document.getElementById('help-overlay'),
             closeHelp: document.getElementById('close-help'),
             error: document.getElementById('error'),
@@ -103,6 +106,9 @@ class SlideShow {
 
         // Help overlay close button
         this.elements.closeHelp.addEventListener('click', () => this.toggleHelp());
+
+        // Grid overlay close button
+        this.elements.closeGrid.addEventListener('click', () => this.toggleGrid());
 
         // Prevent default behavior for navigation keys
         document.addEventListener('keydown', (e) => {
@@ -227,6 +233,10 @@ class SlideShow {
             case 'End':
                 this.goToSlide(this.totalSlides - 1);
                 break;
+            case 'o':
+            case 'O':
+                this.toggleGrid();
+                break;
             case 'f':
             case 'F':
                 this.toggleFullscreen();
@@ -237,6 +247,8 @@ class SlideShow {
             case 'Escape':
                 if (this.isFullscreen) {
                     this.exitFullscreen();
+                } else if (!this.elements.gridOverlay.classList.contains('hidden')) {
+                    this.toggleGrid();
                 } else if (!this.elements.helpOverlay.classList.contains('hidden')) {
                     this.toggleHelp();
                 }
@@ -358,6 +370,53 @@ class SlideShow {
 
     toggleHelp() {
         this.elements.helpOverlay.classList.toggle('hidden');
+    }
+
+    toggleGrid() {
+        const isHidden = this.elements.gridOverlay.classList.contains('hidden');
+
+        if (isHidden) {
+            // Build and show grid
+            this.buildGrid();
+            this.elements.gridOverlay.classList.remove('hidden');
+        } else {
+            // Hide grid
+            this.elements.gridOverlay.classList.add('hidden');
+        }
+    }
+
+    buildGrid() {
+        // Clear existing grid
+        this.elements.gridContainer.innerHTML = '';
+
+        // Create grid items for each slide
+        this.slides.forEach((slide, index) => {
+            const gridSlide = document.createElement('div');
+            gridSlide.className = 'grid-slide';
+            if (index === this.currentSlideIndex) {
+                gridSlide.classList.add('current');
+            }
+
+            // Add slide number badge
+            const slideNumber = document.createElement('div');
+            slideNumber.className = 'grid-slide-number';
+            slideNumber.textContent = index + 1;
+            gridSlide.appendChild(slideNumber);
+
+            // Add slide content preview
+            const slideContent = document.createElement('div');
+            slideContent.className = 'grid-slide-content';
+            slideContent.innerHTML = marked.parse(slide.content);
+            gridSlide.appendChild(slideContent);
+
+            // Add click handler to navigate to slide
+            gridSlide.addEventListener('click', () => {
+                this.goToSlide(index);
+                this.toggleGrid();
+            });
+
+            this.elements.gridContainer.appendChild(gridSlide);
+        });
     }
 
     showError(message) {
