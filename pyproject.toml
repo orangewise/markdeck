@@ -34,6 +34,9 @@ dev = [
     "build>=1.0.0",
     "twine>=4.0.0",
 ]
+screenshots = [
+    "playwright>=1.40.0",
+]
 
 [project.scripts]
 markdeck = "markdeck.cli:main"

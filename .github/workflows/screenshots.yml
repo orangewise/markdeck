@@ -15,26 +15,26 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      # Install Playwright and browsers
-      - name: Install Playwright with browsers
+      # Install uv
+      - name: Install uv
         run: |
-          npm install -g playwright
-          npx playwright install --with-deps chromium
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
 
-      # Install MarkDeck
+      # Install MarkDeck with screenshot dependencies
       - name: Install MarkDeck dependencies
         run: |
-          pip install -e .
+          uv pip install --system -e ".[screenshots]"
+
+      # Install Playwright browsers
+      - name: Install Playwright browsers
+        run: |
+          playwright install --with-deps chromium
 
       # Start server in background
       - name: Start MarkDeck server
@@ -42,11 +42,6 @@ jobs:
           markdeck present examples/features.md --port 8888 --no-browser &
           sleep 5
           curl -f http://127.0.0.1:8888/ || exit 1
-
-      # Install Python dependencies for screenshot script
-      - name: Install screenshot dependencies
-        run: |
-          pip install playwright pillow
 
       # Run screenshot capture
       - name: Capture screenshots
