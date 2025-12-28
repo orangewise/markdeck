@@ -54,6 +54,15 @@
             </div>
         </div>
 
+        <!-- Grid overview -->
+        <div id="grid-overlay" class="grid-overlay hidden">
+            <div class="grid-header">
+                <h2>Slide Overview</h2>
+                <button id="close-grid" class="close-grid-button">✕</button>
+            </div>
+            <div id="grid-container" class="grid-container"></div>
+        </div>
+
         <!-- Help overlay -->
         <div id="help-overlay" class="help-overlay hidden">
             <div class="help-content">
@@ -63,9 +72,10 @@
                     <tr><td><kbd>←</kbd></td><td>Previous slide</td></tr>
                     <tr><td><kbd>Home</kbd></td><td>First slide</td></tr>
                     <tr><td><kbd>End</kbd></td><td>Last slide</td></tr>
+                    <tr><td><kbd>O</kbd></td><td>Toggle slide overview</td></tr>
                     <tr><td><kbd>F</kbd></td><td>Toggle fullscreen</td></tr>
                     <tr><td><kbd>?</kbd></td><td>Show/hide help</td></tr>
-                    <tr><td><kbd>Esc</kbd></td><td>Exit fullscreen/help</td></tr>
+                    <tr><td><kbd>Esc</kbd></td><td>Exit fullscreen/help/overview</td></tr>
                 </table>
                 <button id="close-help" class="close-button">Close (Esc)</button>
             </div>
