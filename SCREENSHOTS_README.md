@@ -27,9 +27,36 @@ The automated screenshot scripts (`capture_screenshots.py`, `selenium_screenshot
    - Available ChromeDriver: v114 or v143
    - Downloads blocked by network restrictions
 
-## How to Generate Screenshots Locally
+## How to Generate Screenshots
 
-### Option 1: Manual Screenshots
+### ⭐ Option 1: GitHub Actions (Recommended - Fully Automated)
+
+**The easiest way to generate screenshots** - uses GitHub's CI environment which has full network access:
+
+1. **Trigger the workflow:**
+   - Go to your repository's **Actions** tab
+   - Select **"Generate Grid View Screenshots"**
+   - Click **"Run workflow"** → **"Run workflow"**
+
+2. **Download screenshots:**
+   - Wait 2-3 minutes for completion
+   - Scroll to **Artifacts** section
+   - Download **grid-view-screenshots.zip**
+
+3. **Or let it auto-commit:**
+   - Screenshots are automatically committed to `screenshots/` directory
+   - No manual download needed!
+
+**Advantages:**
+- ✅ Zero setup required
+- ✅ Works around network restrictions
+- ✅ Fully automated
+- ✅ Free for public repos
+- ✅ Screenshots committed automatically
+
+See `.github/workflows/README.md` for details.
+
+### Option 2: Manual Screenshots
 
 ```bash
 # Start the presentation
@@ -42,7 +69,7 @@ markdeck present examples/features.md
 # 4. Press O again to show current highlight
 ```
 
-### Option 2: Run Screenshot Scripts Locally
+### Option 3: Run Screenshot Scripts Locally
 
 On a machine **with** network access:
 
@@ -67,7 +94,7 @@ npm install puppeteer
 node capture-screenshots.mjs
 ```
 
-### Option 3: Use the Interactive Demo
+### Option 4: Use the Interactive Demo
 
 Open `GRID_VIEW_DEMO.html` in your browser to see:
 - Live interactive grid (hover effects work!)
