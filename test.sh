@@ -13,6 +13,11 @@ uv sync --extra dev
 # Run Python tests
 python -m unittest discover tests/ -v
 
+# Install JavaScript dependencies
+echo ""
+echo "Installing JavaScript dependencies..."
+npm ci
+
 # Run JavaScript tests
 echo ""
 echo "Running JavaScript tests..."
