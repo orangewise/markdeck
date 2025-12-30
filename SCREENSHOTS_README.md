@@ -69,29 +69,19 @@ markdeck present examples/features.md
 # 4. Press O again to show current highlight
 ```
 
-### Option 3: Run Screenshot Scripts Locally
+### Option 3: Run Screenshot Script Locally
 
 On a machine **with** network access:
 
 ```bash
 # Install dependencies
-pip install playwright selenium
+pip install playwright
 
 # Install browser
 python -m playwright install chromium
 
 # Run script
 python capture_screenshots.py
-```
-
-Or use the Node.js version:
-
-```bash
-# Install dependencies
-npm install puppeteer
-
-# Run script
-node capture-screenshots.mjs
 ```
 
 ### Option 4: Use the Interactive Demo
