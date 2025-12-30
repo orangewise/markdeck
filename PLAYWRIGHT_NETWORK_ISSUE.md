@@ -9,6 +9,13 @@ Playwright browser binaries cannot be downloaded in Claude Code on the web sessi
 **Affects:** Claude Code on the web sessions
 **Does NOT affect:** Regular Claude.ai chat sessions (confirmed to have access)
 
+## Status Tracking
+
+- [x] Issue documented
+- [ ] Infrastructure team notified
+- [ ] Domains added to allowlist
+- [ ] Verified in Claude Code on the web
+
 ## The Problem
 
 When attempting to install Playwright browsers in Claude Code on the web:
