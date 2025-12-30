@@ -407,6 +407,34 @@ class SlideShow {
             const slideContent = document.createElement('div');
             slideContent.className = 'grid-slide-content';
             slideContent.innerHTML = marked.parse(slide.content);
+
+            // Rewrite relative image paths to use /assets/ endpoint
+            slideContent.querySelectorAll('img').forEach((img) => {
+                const src = img.getAttribute('src');
+                if (src && !src.startsWith('http://') && !src.startsWith('https://') && !src.startsWith('//') && !src.startsWith('/')) {
+                    const cleanPath = src.startsWith('./') ? src.slice(2) : src;
+                    img.setAttribute('src', '/assets/' + cleanPath);
+                }
+            });
+
+            // Apply syntax highlighting to code blocks
+            slideContent.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+            });
+
+            // Render math equations with KaTeX
+            if (window.renderMathInElement) {
+                renderMathInElement(slideContent, {
+                    delimiters: [
+                        { left: '$$', right: '$$', display: true },
+                        { left: '$', right: '$', display: false },
+                        { left: '\\[', right: '\\]', display: true },
+                        { left: '\\(', right: '\\)', display: false }
+                    ],
+                    throwOnError: false
+                });
+            }
+
             gridSlide.appendChild(slideContent);
 
             // Add click handler to navigate to slide
@@ -417,6 +445,17 @@ class SlideShow {
 
             this.elements.gridContainer.appendChild(gridSlide);
         });
+
+        // Render mermaid diagrams after all slides are added to the DOM
+        const mermaidElements = this.elements.gridContainer.querySelectorAll('.mermaid');
+        if (mermaidElements.length > 0 && window.mermaid) {
+            mermaidElements.forEach((element) => {
+                element.removeAttribute('data-processed');
+            });
+            window.mermaid.run({
+                nodes: mermaidElements
+            });
+        }
     }
 
     showError(message) {
