@@ -12,7 +12,7 @@ Playwright browser binaries cannot be downloaded in Claude Code on the web sessi
 ## Status Tracking
 
 - [x] Issue documented
-- [ ] Infrastructure team notified
+- [x] Infrastructure team notified (https://github.com/anthropics/claude-code/issues/15583)
 - [ ] Domains added to allowlist
 - [ ] Verified in Claude Code on the web
 
