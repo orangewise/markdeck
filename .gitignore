@@ -38,6 +38,7 @@ ENV/
 .coverage
 htmlcov/
 .tox/
+coverage/
 
 # OS
 .DS_Store
@@ -46,3 +47,4 @@ Thumbs.db
 # Project specific
 *.log
 .markdeck.yml
+node_modules/
