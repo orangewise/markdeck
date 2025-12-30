@@ -1,14 +1,4 @@
 {
-  "permissions": {
-    "allow": [
-      "WebFetch(domain:github.com)",
-      "WebFetch(domain:api.example.com)",
-      "WebFetch(domain:cdn.playwright.dev)",
-      "WebFetch(domain:playwright.download.prss.microsoft.com)",
-      "WebFetch(domain:playwright.dev)",
-      "WebFetch(domain:storage.googleapis.com)"
-    ]
-  },
   "hooks": {
     "SessionStart": [
       {
