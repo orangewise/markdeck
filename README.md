@@ -12,6 +12,7 @@ A lightweight, markdown-based presentation tool that runs locally.
 - **🔥 Hot Reload**: Automatically refreshes when you edit your markdown file (with `--watch`)
 - **🎨 Beautiful Design**: Modern, distraction-free presentation interface
 - **⌨️ Keyboard Shortcuts**: Navigate efficiently with keyboard controls
+- **🔍 Grid View**: Overview all slides at once with interactive thumbnail grid (press `O`)
 - **💬 Speaker Notes**: Hidden notes visible in terminal
 - **🎯 Syntax Highlighting**: Beautiful code blocks powered by highlight.js
 - **📊 Mermaid Diagrams**: Create flowcharts, sequence diagrams, and more with Mermaid.js
@@ -114,7 +115,7 @@ markdeck present slides.md --watch
 # Present on a custom port
 markdeck present slides.md --port 3000
 
-# Present without auto-opening browser
+# Present without auto-opening browser (useful for automated screenshot capture)
 markdeck present slides.md --no-browser
 
 # Combine options
@@ -137,7 +138,7 @@ markdeck --version
 
 Create slides by separating content with `---` on its own line:
 
-```markdown
+````markdown
 # My First Slide
 
 This is the content of the first slide.
@@ -169,7 +170,7 @@ This content is visible to the audience.
 These are speaker notes.
 They will appear in the terminal where you run markdeck.
 -->
-```
+````
 
 ### Keyboard Shortcuts
 
@@ -179,9 +180,10 @@ They will appear in the terminal where you run markdeck.
 | `←` / `PageUp` | Previous slide |
 | `Home` | First slide |
 | `End` | Last slide |
+| `O` | Toggle grid view (slide overview) |
 | `F` | Toggle fullscreen |
 | `?` | Show help |
-| `Esc` | Exit fullscreen/help |
+| `Esc` | Exit fullscreen/help/grid |
 
 ## 📁 Project Structure
 
@@ -287,6 +289,45 @@ graph TD
 
 Diagrams render with a dark theme that matches MarkDeck's interface and scale responsively to fit your slides.
 
+### Grid View / Slide Overview
+
+MarkDeck provides a grid view for quick navigation and overview of your entire presentation:
+
+**How to use:**
+- Press `O` at any time to toggle the grid view
+- See all slides as interactive thumbnails in a responsive grid layout
+- Click any slide to jump directly to it
+- The current slide is highlighted with a blue border
+
+**Features:**
+- Visual previews of all slides
+- Current slide indicator
+- Quick navigation by clicking thumbnails
+- Responsive grid layout that adapts to screen size
+- Keyboard controls (`O` to toggle, `Esc` to close)
+
+**Perfect for:**
+- Long presentations (20+ slides)
+- Finding specific slides during Q&A
+- Getting an overview of presentation structure
+- Quick navigation during practice sessions
+
+**Visual Preview:**
+
+<details>
+<summary>Click to see grid view screenshots</summary>
+
+![Normal View](screenshots/01_normal_view.png)
+*Normal presentation view*
+
+![Grid Overview](screenshots/02_grid_overview.png)
+*Grid view showing all slides as thumbnails*
+
+![Current Slide Highlighted](screenshots/05_grid_current_highlight.png)
+*Current slide highlighted with blue border*
+
+</details>
+
 ### Hot Reload
 
 MarkDeck includes hot reload functionality for a seamless development experience:
@@ -313,7 +354,7 @@ markdeck present my-slides.md --watch
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/markdeck.git
+git clone https://github.com/orangewise/markdeck.git
 cd markdeck
 
 # Install with development dependencies
@@ -378,8 +419,9 @@ markdeck present examples/mermaid-test.md
 ### Phase 2 - Enhanced Features
 
 - [x] Hot reload (watch file for changes) ✓
+- [x] Slide overview/grid view ✓
+- [x] PyPI distribution ✓
 - [ ] Multiple themes (dark/light mode toggle)
-- [ ] Slide overview/grid view
 - [ ] Slide transitions
 - [ ] Two-column layouts
 - [ ] Media embedding improvements
@@ -390,7 +432,6 @@ markdeck present examples/mermaid-test.md
 - [ ] Export to standalone HTML
 - [ ] Configuration file support
 - [ ] Custom themes
-- [ ] PyPI distribution
 - [ ] Plugin system
 
 ## 🤝 Contributing
@@ -426,9 +467,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- 🐛 [Report bugs](https://github.com/YOUR_USERNAME/markdeck/issues)
-- 💡 [Request features](https://github.com/YOUR_USERNAME/markdeck/issues)
-- 📖 [Documentation](https://github.com/YOUR_USERNAME/markdeck)
+- 🐛 [Report bugs](https://github.com/orangewise/markdeck/issues)
+- 💡 [Request features](https://github.com/orangewise/markdeck/issues)
+- 📖 [Documentation](https://github.com/orangewise/markdeck)
 
 ## ⭐ Show Your Support
 
