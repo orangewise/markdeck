@@ -36,6 +36,8 @@ dev = [
 ]
 screenshots = [
     "playwright>=1.40.0",
+    "pixelmatch>=0.3.0",
+    "Pillow>=10.0.0",
 ]
 
 [project.scripts]

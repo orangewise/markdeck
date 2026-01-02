@@ -48,3 +48,7 @@ Thumbs.db
 *.log
 .markdeck.yml
 node_modules/
+
+# Screenshot comparison artifacts
+screenshots/.backup/
+screenshots/diffs/
