@@ -106,29 +106,38 @@ The automated screenshot generation works via GitHub Actions:
 1. Installs MarkDeck with screenshot dependencies
 2. Installs Playwright browsers (works in GitHub environment)
 3. Starts MarkDeck server on port 8888
-4. Runs `capture_screenshots.py` script
-5. Commits screenshots back to repository
+4. Runs `capture_screenshots.py` script (grid view screenshots)
+5. Runs `capture_theme_screenshots.py` script (theme screenshots)
+6. Commits screenshots back to repository
+
+**Automatic triggers:**
+- **Pull Requests:** Screenshots are automatically generated and committed when PRs modify files in `markdeck/static/` or `examples/`
+- **Push events:** Screenshots are regenerated when changes are pushed to these paths
 
 **Manual trigger:**
 - Go to repository Actions tab
-- Select "Generate Grid View Screenshots"
+- Select "Generate Screenshots"
 - Click "Run workflow"
 
 ## Project Structure
 
 ```
 markdeck/
-├── .venv/                      # Python virtual environment (uv-based)
-├── .github/workflows/          # GitHub Actions workflows
-│   └── screenshots.yml        # Screenshot generation workflow
-├── markdeck/                   # Main package
-│   └── static/                # Static assets (JS, CSS)
-│       └── slides.js          # Grid view implementation
-├── examples/                   # Example presentations
-│   └── features.md            # Demo presentation
-├── screenshots/                # Generated screenshots
-├── capture_screenshots.py     # Playwright screenshot script
-└── CLAUDE.md                  # This file
+├── .venv/                           # Python virtual environment (uv-based)
+├── .github/workflows/               # GitHub Actions workflows
+│   └── screenshots.yml             # Screenshot generation workflow
+├── markdeck/                        # Main package
+│   └── static/                     # Static assets (JS, CSS)
+│       ├── slides.js               # Grid view and theme cycling
+│       ├── style.css               # Main styles
+│       ├── dark.css                # Dark theme
+│       └── light.css               # Light theme
+├── examples/                        # Example presentations
+│   └── features.md                 # Demo presentation
+├── screenshots/                     # Generated screenshots
+├── capture_screenshots.py          # Grid view screenshot script
+├── capture_theme_screenshots.py    # Theme screenshot script
+└── CLAUDE.md                       # This file
 
 ```
 

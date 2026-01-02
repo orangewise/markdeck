@@ -1,4 +1,4 @@
-name: Generate Grid View Screenshots
+name: Generate Screenshots
 
 on:
   workflow_dispatch: # Allow manual trigger
@@ -57,15 +57,20 @@ jobs:
           curl -f http://127.0.0.1:8888/ || exit 1
 
       # Run screenshot capture
-      - name: Capture screenshots
+      - name: Capture grid view screenshots
         run: |
           python capture_screenshots.py
+
+      # Capture theme screenshots
+      - name: Capture theme screenshots
+        run: |
+          python capture_theme_screenshots.py
 
       # Upload screenshots as artifacts
       - name: Upload screenshots
         uses: actions/upload-artifact@v4
         with:
-          name: grid-view-screenshots
+          name: markdeck-screenshots
           path: screenshots/
           retention-days: 90
 
@@ -82,7 +87,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add screenshots/
-          git diff --staged --quiet || git commit -m "Update grid view screenshots [skip ci]"
+          git diff --staged --quiet || git commit -m "Update screenshots (grid view and themes) [skip ci]"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
