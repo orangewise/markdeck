@@ -12,7 +12,7 @@ from markdeck.server import app, enable_watch_mode, set_presentation_file
 
 
 @click.group(invoke_without_command=True)
-@click.option('--version', is_flag=True, help='Show version and exit')
+@click.option("--version", is_flag=True, help="Show version and exit")
 @click.pass_context
 def main(ctx, version):
     """MarkDeck - A lightweight markdown presentation tool."""
@@ -24,11 +24,11 @@ def main(ctx, version):
 
 
 @main.command()
-@click.argument('file', type=click.Path(exists=True, path_type=Path))
-@click.option('--port', '-p', default=8000, help='Port to run the server on', type=int)
-@click.option('--host', '-h', default='127.0.0.1', help='Host to bind to')
-@click.option('--no-browser', is_flag=True, help='Do not open browser automatically')
-@click.option('--watch', '-w', is_flag=True, help='Watch file for changes and reload automatically')
+@click.argument("file", type=click.Path(exists=True, path_type=Path))
+@click.option("--port", "-p", default=8000, help="Port to run the server on", type=int)
+@click.option("--host", "-h", default="127.0.0.1", help="Host to bind to")
+@click.option("--no-browser", is_flag=True, help="Do not open browser automatically")
+@click.option("--watch", "-w", is_flag=True, help="Watch file for changes and reload automatically")
 def present(file: Path, port: int, host: str, no_browser: bool, watch: bool):
     """
     Start presenting a markdown file.
@@ -40,7 +40,7 @@ def present(file: Path, port: int, host: str, no_browser: bool, watch: bool):
         click.echo(f"Error: File not found: {file}", err=True)
         sys.exit(1)
 
-    if file.suffix.lower() not in ['.md', '.markdown']:
+    if file.suffix.lower() not in [".md", ".markdown"]:
         click.echo("Warning: File does not have .md or .markdown extension", err=True)
 
     # Set the presentation file
@@ -83,9 +83,7 @@ def present(file: Path, port: int, host: str, no_browser: bool, watch: bool):
 
             async def run_with_watcher():
                 # Start the file watcher task
-                watcher_task = asyncio.create_task(
-                    _watch_file_async(file_path)
-                )
+                watcher_task = asyncio.create_task(_watch_file_async(file_path))
                 try:
                     await server.serve()
                 except asyncio.CancelledError:
@@ -114,8 +112,8 @@ async def _watch_file_async(file_path: Path):
 
 
 @main.command()
-@click.argument('filename', type=click.Path(path_type=Path))
-@click.option('--title', '-t', help='Presentation title')
+@click.argument("filename", type=click.Path(path_type=Path))
+@click.option("--title", "-t", help="Presentation title")
 def init(filename: Path, title: str):
     """
     Create a new presentation from a template.
@@ -126,7 +124,7 @@ def init(filename: Path, title: str):
         click.confirm(f"File {filename} already exists. Overwrite?", abort=True)
 
     # Create template
-    template_title = title or filename.stem.replace('-', ' ').replace('_', ' ').title()
+    template_title = title or filename.stem.replace("-", " ").replace("_", " ").title()
     template = f"""# {template_title}
 
 Your presentation subtitle or tagline
@@ -198,14 +196,14 @@ markdeck present {filename.name}
 Visit the documentation for more features!
 """
 
-    filename.write_text(template, encoding='utf-8')
+    filename.write_text(template, encoding="utf-8")
     click.echo(f"Created presentation: {filename}")
     click.echo("\nStart presenting with:")
     click.echo(f"  markdeck present {filename}")
 
 
 @main.command()
-@click.argument('file', type=click.Path(exists=True, path_type=Path))
+@click.argument("file", type=click.Path(exists=True, path_type=Path))
 def validate(file: Path):
     """
     Validate a markdown presentation file.
@@ -244,5 +242,5 @@ def validate(file: Path):
         sys.exit(1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

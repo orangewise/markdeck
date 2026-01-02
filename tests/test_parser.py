@@ -119,6 +119,7 @@ Content 3"""
         # Mock parse method
         def mock_parse():
             return slides
+
         parser.parse = mock_parse
 
         title = parser.get_title()
@@ -134,6 +135,7 @@ Content 3"""
 
         def mock_parse():
             return slides
+
         parser.parse = mock_parse
 
         result = parser.to_json()
