@@ -244,6 +244,10 @@ class SlideShow {
             case '?':
                 this.toggleHelp();
                 break;
+            case 't':
+            case 'T':
+                this.cycleTheme();
+                break;
             case 'Escape':
                 if (this.isFullscreen) {
                     this.exitFullscreen();
@@ -383,6 +387,72 @@ class SlideShow {
             // Hide grid
             this.elements.gridOverlay.classList.add('hidden');
         }
+    }
+
+    cycleTheme() {
+        // Define available themes
+        const themes = ['dark', 'light'];
+
+        // Get current theme from localStorage, default to 'dark'
+        const currentTheme = localStorage.getItem('markdeck-theme') || 'dark';
+
+        // Find current theme index and cycle to next theme
+        const currentIndex = themes.indexOf(currentTheme);
+        const nextIndex = (currentIndex + 1) % themes.length;
+        const newTheme = themes[nextIndex];
+
+        // Save new theme to localStorage
+        localStorage.setItem('markdeck-theme', newTheme);
+
+        // Update theme CSS
+        const themeCss = document.getElementById('theme-css');
+        if (themeCss) {
+            themeCss.href = `/static/${newTheme}.css`;
+        }
+
+        // Update highlight.js theme
+        const highlightCss = document.getElementById('highlight-css');
+        if (highlightCss) {
+            const hlTheme = newTheme === 'dark' ? 'github-dark' : 'github';
+            highlightCss.href = `https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/${hlTheme}.min.css`;
+        }
+
+        // Update mermaid theme by reinitializing
+        if (window.mermaid) {
+            const mermaidTheme = newTheme === 'dark' ? 'dark' : 'default';
+            window.mermaid.initialize({
+                startOnLoad: false,
+                theme: mermaidTheme
+            });
+
+            // Re-render current slide's mermaid diagrams if any
+            this.showSlide(this.currentSlideIndex);
+        }
+
+        // Show theme change notification
+        this.showThemeNotification(newTheme);
+    }
+
+    showThemeNotification(theme) {
+        // Create a temporary notification
+        const notification = document.createElement('div');
+        notification.textContent = `Theme: ${theme.charAt(0).toUpperCase() + theme.slice(1)}`;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(74, 158, 255, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            z-index: 10000;
+            font-size: 1rem;
+            animation: fadeInOut 2s ease-in-out;
+        `;
+
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 2000);
     }
 
     buildGrid() {
