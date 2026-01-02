@@ -146,16 +146,6 @@ Publishes the MarkDeck package to PyPI (Python Package Index) for distribution. 
    - **Publish to TestPyPI:** Check this box to test the upload first
 5. Click **"Run workflow"**
 
-**Test Workflow:**
-```bash
-# After TestPyPI publish completes:
-pip install --index-url https://test.pypi.org/simple/ markdeck==<version>
-
-# Test the package
-markdeck --version
-markdeck present examples/features.md
-```
-
 #### Method 2: GitHub Release (Recommended for Production)
 
 1. Create a new release on GitHub:
@@ -220,8 +210,6 @@ Before publishing to PyPI:
 - [ ] Version is updated in `pyproject.toml` and `__init__.py`
 - [ ] `CHANGELOG.md` is updated (if exists)
 - [ ] `README.md` is up to date
-- [ ] Test on TestPyPI first
-- [ ] Install from TestPyPI and verify functionality
 - [ ] Create GitHub release with release notes
 
 ### Testing the Package Build Locally
