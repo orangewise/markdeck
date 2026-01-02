@@ -6,14 +6,27 @@ on:
     paths:
       - 'markdeck/static/**'
       - 'examples/**'
+  pull_request: # Generate screenshots on PRs
+    paths:
+      - 'markdeck/static/**'
+      - 'examples/**'
 
 jobs:
   screenshots:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write # Needed to commit and push screenshots
+      pull-requests: write # Needed to push to PR branches
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # For PRs: checkout the PR branch so we can commit to it
+          # For push/manual: use default ref
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -56,9 +69,15 @@ jobs:
           path: screenshots/
           retention-days: 90
 
-      # Optionally commit screenshots back to repo
+      # Commit screenshots back to repo
+      # - Always on manual trigger
+      # - On PRs only if from same repo (can't push to forks)
+      # - Fork PRs will only have artifacts uploaded
       - name: Commit screenshots
-        if: github.event_name == 'workflow_dispatch'
+        if: |
+          github.event_name == 'workflow_dispatch' ||
+          (github.event_name == 'pull_request' &&
+           github.event.pull_request.head.repo.full_name == github.repository)
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

@@ -390,4 +390,4 @@ class ComplexDataProcessor:
 
 These code examples showcase MarkDeck's syntax highlighting capabilities.
 
-All powered by highlight.js!
+All powered by highlight.js :)
