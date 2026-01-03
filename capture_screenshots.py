@@ -72,23 +72,24 @@ async def capture_screenshots():
         await asyncio.sleep(1)
         await page.screenshot(path="screenshots/theme_light.png")
 
-        # Screenshot 8: Dark theme with grid view
-        print("Switching back to dark theme...")
-        await page.keyboard.press("t")
-        await asyncio.sleep(1)
+        # Screenshot 8: Light theme with grid view
+        print("Capturing light theme with grid view...")
         await page.keyboard.press("o")
         await asyncio.sleep(1)
-        await page.screenshot(path="screenshots/theme_dark_grid.png")
+        await page.screenshot(path="screenshots/theme_light_grid.png")
 
-        # Screenshot 9: Light theme with grid view
-        print("Switching to light theme with grid...")
+        # Screenshot 9: Dark theme with grid view
+        print("Switching back to dark theme with grid...")
         await page.keyboard.press("Escape")
+        await asyncio.sleep(0.5)
+        # Press 't' twice to cycle: light -> beige -> dark
+        await page.keyboard.press("t")
         await asyncio.sleep(0.5)
         await page.keyboard.press("t")
         await asyncio.sleep(1)
         await page.keyboard.press("o")
         await asyncio.sleep(1)
-        await page.screenshot(path="screenshots/theme_light_grid.png")
+        await page.screenshot(path="screenshots/theme_dark_grid.png")
 
         await browser.close()
         print("\n✅ All screenshots captured successfully!")
