@@ -391,7 +391,7 @@ class SlideShow {
 
     cycleTheme() {
         // Define available themes
-        const themes = ['dark', 'light'];
+        const themes = ['dark', 'light', 'beige'];
 
         // Get current theme from localStorage, default to 'dark'
         const currentTheme = localStorage.getItem('markdeck-theme') || 'dark';

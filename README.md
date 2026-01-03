@@ -88,6 +88,12 @@ uv cache clean markdeck
 uvx . present examples/features.md --watch
 ```
 
+### Clear Browser Cache
+
+- Safari: Cmd + Option + R (or hold Shift while clicking reload)
+- Chrome/Edge: Cmd + Shift + R (should work)
+- Firefox: Cmd + Shift + R
+
 
 ### Create Your First Presentation
 
