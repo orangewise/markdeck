@@ -75,17 +75,23 @@ This file contains planned tasks and issues for MarkDeck development. Once Beads
 
 ### Feature: Two-Column Layouts
 **Priority:** Medium
-**Status:** Ready
+**Status:** Completed
 **Description:** Support two-column slide layouts for side-by-side content.
 
 **Sub-tasks:**
-- Design markdown syntax for two-column layout (e.g., `:::columns`)
-- Implement CSS flexbox/grid layout
-- Support nested markdown in columns
-- Ensure responsive behavior on smaller screens
-- Add example slides to documentation
+- ✅ Design markdown syntax for two-column layout (`:::columns` ... `|||` ... `:::`)
+- ✅ Implement CSS flexbox/grid layout
+- ✅ Support nested markdown in columns (via Python markdown library)
+- ✅ Ensure responsive behavior on smaller screens (columns stack on mobile)
+- ✅ Add example slides to documentation (`examples/two-column-examples.md`)
 
 **Dependencies:** None
+
+**Implementation Notes:**
+- Parser transforms `:::columns` syntax into HTML divs
+- Each column's markdown is rendered server-side using Python's `markdown` library
+- CSS uses flexbox with responsive breakpoint at 768px
+- Supports all markdown features within columns (code, lists, images, etc.)
 
 ---
 

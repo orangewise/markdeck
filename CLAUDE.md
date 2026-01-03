@@ -295,10 +295,11 @@ File Change ─▶ watchfiles ─▶ watcher.py ─▶ notify_clients_reload() �
 
 **Classes:**
 - `Slide` - Represents a single slide
-  - `content` - Markdown content (notes removed)
+  - `content` - Markdown content (notes and columns removed/transformed)
   - `notes` - Speaker notes
   - `index` - Slide number (0-based)
   - `_extract_notes()` - Extract `<!--NOTES:...-->` comments
+  - `_transform_columns()` - Transform `:::columns` syntax into HTML divs
   - `to_dict()` - Convert to JSON-serializable dict
 
 - `SlideParser` - Parse markdown into slides
@@ -309,6 +310,19 @@ File Change ─▶ watchfiles ─▶ watcher.py ─▶ notify_clients_reload() �
   - `to_json()` - Return full JSON with slides and metadata
 
 **Slide Delimiter:** Slides are separated by `---` on its own line
+
+**Two-Column Layout Support:**
+- Syntax: `:::columns` ... `|||` ... `:::`
+- The `_transform_columns()` method converts this syntax into HTML divs
+- Each column's markdown is rendered to HTML using Python's `markdown` library
+- Resulting HTML structure:
+  ```html
+  <div class="columns-container">
+    <div class="column-left">..rendered HTML..</div>
+    <div class="column-right">..rendered HTML..</div>
+  </div>
+  ```
+- The frontend (marked.js) passes through this HTML as-is
 
 ### 4. Watcher (`markdeck/watcher.py`)
 

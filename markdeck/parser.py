@@ -4,6 +4,8 @@ import re
 from pathlib import Path
 from typing import Any
 
+import markdown
+
 
 class Slide:
     """Represents a single slide in a presentation."""
@@ -19,6 +21,7 @@ class Slide:
         self.content = content.strip()
         self.index = index
         self.notes = self._extract_notes()
+        self._transform_columns()
 
     def _extract_notes(self) -> str:
         """
@@ -35,6 +38,54 @@ class Slide:
             self.content = self.content.strip()
             return match.group(1).strip()
         return ""
+
+    def _transform_columns(self) -> None:
+        """
+        Transform column syntax into HTML div structure.
+
+        Converts:
+            :::columns
+            Left content
+            |||
+            Right content
+            :::
+
+        Into HTML divs with pre-rendered markdown content
+        """
+        # Pattern to match column blocks
+        column_pattern = r":::columns\s*\n(.*?)\n:::"
+
+        # Create markdown renderer with extensions
+        md = markdown.Markdown(extensions=["extra", "codehilite", "fenced_code"])
+
+        def replace_columns(match):
+            content = match.group(1)
+            # Split on ||| separator
+            parts = re.split(r"\n\|\|\|\n", content, maxsplit=1)
+
+            if len(parts) == 2:
+                left_content = parts[0].strip()
+                right_content = parts[1].strip()
+
+                # Render each column's markdown to HTML
+                # Reset the markdown instance for each column to avoid state issues
+                md.reset()
+                left_html = md.convert(left_content)
+                md.reset()
+                right_html = md.convert(right_content)
+
+                # Create HTML structure that marked.js will pass through
+                return (
+                    '<div class="columns-container">\n'
+                    f'<div class="column-left">\n{left_html}\n</div>\n'
+                    f'<div class="column-right">\n{right_html}\n</div>\n'
+                    '</div>'
+                )
+            else:
+                # If no separator found, return original content
+                return match.group(0)
+
+        self.content = re.sub(column_pattern, replace_columns, self.content, flags=re.DOTALL)
 
     def to_dict(self) -> dict[str, Any]:
         """
