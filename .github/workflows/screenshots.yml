@@ -56,15 +56,10 @@ jobs:
           sleep 5
           curl -f http://127.0.0.1:8888/ || exit 1
 
-      # Run screenshot capture
-      - name: Capture grid view screenshots
+      # Run screenshot capture (grid view and themes)
+      - name: Capture screenshots
         run: |
           python capture_screenshots.py
-
-      # Capture theme screenshots
-      - name: Capture theme screenshots
-        run: |
-          python capture_theme_screenshots.py
 
       # Upload screenshots as artifacts
       - name: Upload screenshots
