@@ -48,3 +48,5 @@ Thumbs.db
 *.log
 .markdeck.yml
 node_modules/
+.claude-tool-usage-stdin-out.txt
+.claude/settings.local.json
