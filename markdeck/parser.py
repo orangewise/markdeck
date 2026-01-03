@@ -52,16 +52,16 @@ class Slide:
 
         Into HTML divs with pre-rendered markdown content
         """
-        # Pattern to match column blocks
-        column_pattern = r":::columns\s*\n(.*?)\n:::"
+        # Pattern to match column blocks (more forgiving with whitespace)
+        column_pattern = r":::columns\s*\n(.*?)\s*\n:::"
 
         # Create markdown renderer with extensions
         md = markdown.Markdown(extensions=["extra", "codehilite", "fenced_code"])
 
         def replace_columns(match):
             content = match.group(1)
-            # Split on ||| separator
-            parts = re.split(r"\n\|\|\|\n", content, maxsplit=1)
+            # Split on ||| separator (more forgiving with whitespace)
+            parts = re.split(r"\s*\|\|\|\s*", content, maxsplit=1)
 
             if len(parts) == 2:
                 left_content = parts[0].strip()
