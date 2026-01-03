@@ -91,8 +91,7 @@ markdeck/
 ├── scripts/                         # Utility scripts
 │   └── install.sh                  # SessionStart hook installation script
 │
-├── capture_screenshots.py          # Playwright screenshot script (grid view)
-├── capture_theme_screenshots.py    # Theme screenshot generation (NOT FOUND YET)
+├── capture_screenshots.py          # Playwright screenshot script (grid view and themes)
 ├── pyproject.toml                  # Python project configuration
 ├── package.json                    # Node.js config (for jest, if used)
 ├── publish.sh                      # PyPI publishing script
@@ -453,10 +452,9 @@ Follow these conventions:
 3. Install MarkDeck with `[screenshots]` extra
 4. Install Playwright browsers (chromium)
 5. Start MarkDeck server on port 8888
-6. Run `capture_screenshots.py` (grid view)
-7. Run `capture_theme_screenshots.py` (themes)
-8. Upload screenshots as artifacts
-9. Commit screenshots back to branch (if same repo)
+6. Run `capture_screenshots.py` (captures both grid view and theme screenshots)
+7. Upload screenshots as artifacts
+8. Commit screenshots back to branch (if same repo)
 
 **Important Notes:**
 - Fork PRs only get artifacts, not commits (can't push to fork)
