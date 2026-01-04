@@ -56,7 +56,7 @@ jobs:
           sleep 5
           curl -f http://127.0.0.1:8888/ || exit 1
 
-      # Run screenshot capture (grid view and themes)
+      # Run screenshot capture (grid view, themes, and two-column layout)
       - name: Capture screenshots
         run: |
           python capture_screenshots.py
@@ -82,7 +82,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add screenshots/
-          git diff --staged --quiet || git commit -m "Update screenshots (grid view and themes) [skip ci]"
+          git diff --staged --quiet || git commit -m "Update screenshots (grid view, themes, and two-column layout) [skip ci]"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

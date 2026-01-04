@@ -91,6 +91,26 @@ async def capture_screenshots():
         await asyncio.sleep(1)
         await page.screenshot(path="screenshots/theme_dark_grid.png")
 
+        # ===== Two-Column Layout Screenshots =====
+        print("\n=== Capturing Two-Column Layout Screenshots ===")
+
+        # Navigate back to features.md (already on port 8888)
+        print("Navigating to two-column example slide...")
+        await page.goto("http://127.0.0.1:8888/")
+        await page.wait_for_selector(".slide-content", timeout=10000)
+        await asyncio.sleep(1)
+
+        # Navigate to slide 24 (Two-Column Example: Code & Explanation)
+        for i in range(24):
+            await page.keyboard.press("ArrowRight")
+            await asyncio.sleep(0.2)
+
+        await asyncio.sleep(1)
+
+        # Screenshot 10: Two-column layout example
+        print("Capturing two-column layout (Code & Explanation)...")
+        await page.screenshot(path="screenshots/two_column_example.png")
+
         await browser.close()
         print("\n✅ All screenshots captured successfully!")
         print("\nScreenshots saved in: screenshots/")
@@ -105,6 +125,8 @@ async def capture_screenshots():
         print("  - theme_light.png")
         print("  - theme_dark_grid.png")
         print("  - theme_light_grid.png")
+        print("\nTwo-Column Layout Screenshots:")
+        print("  - two_column_example.png")
 
 
 if __name__ == "__main__":
