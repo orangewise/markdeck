@@ -72,23 +72,44 @@ async def capture_screenshots():
         await asyncio.sleep(1)
         await page.screenshot(path="screenshots/theme_light.png")
 
-        # Screenshot 8: Dark theme with grid view
-        print("Switching back to dark theme...")
+        # Screenshot 8: Light theme with grid view
+        print("Capturing light theme with grid view...")
+        await page.keyboard.press("o")
+        await asyncio.sleep(1)
+        await page.screenshot(path="screenshots/theme_light_grid.png")
+
+        # Screenshot 9: Dark theme with grid view
+        print("Switching back to dark theme with grid...")
+        await page.keyboard.press("Escape")
+        await asyncio.sleep(0.5)
+        # Press 't' twice to cycle: light -> beige -> dark
+        await page.keyboard.press("t")
+        await asyncio.sleep(0.5)
         await page.keyboard.press("t")
         await asyncio.sleep(1)
         await page.keyboard.press("o")
         await asyncio.sleep(1)
         await page.screenshot(path="screenshots/theme_dark_grid.png")
 
-        # Screenshot 9: Light theme with grid view
-        print("Switching to light theme with grid...")
-        await page.keyboard.press("Escape")
-        await asyncio.sleep(0.5)
-        await page.keyboard.press("t")
+        # ===== Two-Column Layout Screenshots =====
+        print("\n=== Capturing Two-Column Layout Screenshots ===")
+
+        # Navigate back to features.md (already on port 8888)
+        print("Navigating to two-column example slide...")
+        await page.goto("http://127.0.0.1:8888/")
+        await page.wait_for_selector(".slide-content", timeout=10000)
         await asyncio.sleep(1)
-        await page.keyboard.press("o")
+
+        # Navigate to slide 24 (Two-Column Example: Code & Explanation)
+        for i in range(24):
+            await page.keyboard.press("ArrowRight")
+            await asyncio.sleep(0.2)
+
         await asyncio.sleep(1)
-        await page.screenshot(path="screenshots/theme_light_grid.png")
+
+        # Screenshot 10: Two-column layout example
+        print("Capturing two-column layout (Code & Explanation)...")
+        await page.screenshot(path="screenshots/two_column_example.png")
 
         await browser.close()
         print("\n✅ All screenshots captured successfully!")
@@ -104,6 +125,8 @@ async def capture_screenshots():
         print("  - theme_light.png")
         print("  - theme_dark_grid.png")
         print("  - theme_light_grid.png")
+        print("\nTwo-Column Layout Screenshots:")
+        print("  - two_column_example.png")
 
 
 if __name__ == "__main__":

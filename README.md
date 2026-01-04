@@ -10,9 +10,11 @@ A lightweight, markdown-based presentation tool that runs locally.
 - **📝 Markdown-based**: Write presentations in plain text using familiar Markdown syntax
 - **🚀 Fast & Lightweight**: No heavy frameworks, just clean HTML/CSS/JS
 - **🔥 Hot Reload**: Automatically refreshes when you edit your markdown file (with `--watch`)
-- **🎨 Beautiful Design**: Modern, distraction-free presentation interface
+- **🎨 Beautiful Design**: Modern, distraction-free presentation interface with multiple themes
 - **⌨️ Keyboard Shortcuts**: Navigate efficiently with keyboard controls
 - **🔍 Grid View**: Overview all slides at once with interactive thumbnail grid (press `O`)
+- **🎭 Multiple Themes**: Dark, light, and beige themes (press `T` to cycle)
+- **📑 Two-Column Layouts**: Create side-by-side content with easy syntax
 - **💬 Speaker Notes**: Hidden notes visible in terminal
 - **🎯 Syntax Highlighting**: Beautiful code blocks powered by highlight.js
 - **📊 Mermaid Diagrams**: Create flowcharts, sequence diagrams, and more with Mermaid.js
@@ -187,6 +189,7 @@ They will appear in the terminal where you run markdeck.
 | `Home` | First slide |
 | `End` | Last slide |
 | `O` | Toggle grid view (slide overview) |
+| `T` | Cycle themes (dark/light/beige) |
 | `F` | Toggle fullscreen |
 | `?` | Show help |
 | `Esc` | Exit fullscreen/help/grid |
@@ -294,6 +297,62 @@ graph TD
 - And many more!
 
 Diagrams render with a dark theme that matches MarkDeck's interface and scale responsively to fit your slides.
+
+### Two-Column Layouts
+
+MarkDeck supports two-column layouts for side-by-side content presentation:
+
+````markdown
+:::columns
+### Left Column
+
+Content on the left side
+
+|||
+
+### Right Column
+
+Content on the right side
+:::
+````
+
+**Features:**
+- Simple `:::columns` syntax with `|||` separator
+- Supports all markdown features in each column (code, lists, images, etc.)
+- Responsive design - columns stack vertically on mobile devices
+- Perfect for comparisons, code + documentation, pros/cons lists
+
+**Common use cases:**
+- **Code comparisons**: Before/after examples side-by-side
+- **Documentation**: Code on one side, explanation on the other
+- **Comparisons**: Pros vs Cons, Old vs New approaches
+- **Multi-language examples**: Same logic in different languages
+
+**Example - Code & Explanation:**
+
+````markdown
+:::columns
+### The Code
+
+```python
+def factorial(n):
+    if n <= 1:
+        return 1
+    return n * factorial(n - 1)
+```
+
+|||
+
+### How It Works
+
+This recursive function calculates factorials.
+
+**Base case**: n ≤ 1 returns 1
+**Recursive**: n × factorial(n-1)
+:::
+````
+
+See `examples/two-column-examples.md` for comprehensive examples.
 
 ### Grid View / Slide Overview
 
@@ -406,18 +465,16 @@ ruff format markdeck/ tests/
 
 Check out the `examples/` directory for sample presentations:
 
-- **demo.md**: Basic introduction to MarkDeck
 - **features.md**: Comprehensive feature showcase
+- **two-column-examples.md**: Two-column layout examples
 - **code-examples.md**: Syntax highlighting demo
-- **mermaid-test.md**: Mermaid diagram examples
 
 Try them out:
 
 ```bash
-markdeck present examples/demo.md
 markdeck present examples/features.md
+markdeck present examples/two-column-examples.md
 markdeck present examples/code-examples.md
-markdeck present examples/mermaid-test.md
 ```
 
 ## 🗺️ Roadmap
@@ -427,9 +484,9 @@ markdeck present examples/mermaid-test.md
 - [x] Hot reload (watch file for changes) ✓
 - [x] Slide overview/grid view ✓
 - [x] PyPI distribution ✓
-- [ ] Multiple themes (dark/light mode toggle)
+- [x] Multiple themes (dark/light/beige) ✓
+- [x] Two-column layouts ✓
 - [ ] Slide transitions
-- [ ] Two-column layouts
 - [ ] Media embedding improvements
 
 ### Phase 3 - Polish & Distribution (Planned)

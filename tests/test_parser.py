@@ -47,6 +47,131 @@ These are notes
         slide = Slide("   \n\n   ", 0)
         self.assertEqual(slide.content, "")
 
+    def test_two_column_transformation_basic(self):
+        """Test basic two-column transformation."""
+        content = """:::columns
+Left content
+|||
+Right content
+:::"""
+        slide = Slide(content, 0)
+
+        # Check that marker structure was created
+        self.assertIn("<!-- COLUMN:LEFT:START -->", slide.content)
+        self.assertIn("<!-- COLUMN:LEFT:END -->", slide.content)
+        self.assertIn("<!-- COLUMN:RIGHT:START -->", slide.content)
+        self.assertIn("<!-- COLUMN:RIGHT:END -->", slide.content)
+        self.assertIn("Left content", slide.content)
+        self.assertIn("Right content", slide.content)
+
+    def test_two_column_with_markdown(self):
+        """Test two-column transformation with rich markdown."""
+        content = """:::columns
+# Left Heading
+
+- Item 1
+- Item 2
+|||
+# Right Heading
+
+```python
+print("hello")
+```
+:::"""
+        slide = Slide(content, 0)
+
+        # Check that markdown is preserved in marker structure
+        self.assertIn("<!-- COLUMN:LEFT:START -->", slide.content)
+        self.assertIn("<!-- COLUMN:RIGHT:START -->", slide.content)
+        self.assertIn("# Left Heading", slide.content)
+        self.assertIn("# Right Heading", slide.content)
+        self.assertIn("- Item 1", slide.content)
+        self.assertIn("- Item 2", slide.content)
+        self.assertIn("```python", slide.content)
+
+    def test_two_column_with_extra_whitespace(self):
+        """Test two-column transformation with extra whitespace around separators."""
+        content = """:::columns
+Left content
+  |||
+Right content
+
+:::"""
+        slide = Slide(content, 0)
+
+        # Should still work with extra whitespace
+        self.assertIn("<!-- COLUMN:LEFT:START -->", slide.content)
+        self.assertIn("Left content", slide.content)
+        self.assertIn("Right content", slide.content)
+
+    def test_two_column_missing_separator(self):
+        """Test two-column block without separator preserves original content."""
+        content = """:::columns
+Only one column here
+:::"""
+        slide = Slide(content, 0)
+
+        # Should preserve original content when separator is missing
+        self.assertIn(":::columns", slide.content)
+        self.assertIn("Only one column here", slide.content)
+
+    def test_two_column_with_notes(self):
+        """Test two-column transformation works alongside speaker notes."""
+        content = """:::columns
+Left
+|||
+Right
+:::
+
+<!--NOTES:
+Test notes
+-->"""
+        slide = Slide(content, 0)
+
+        # Both transformations should work
+        self.assertIn("<!-- COLUMN:LEFT:START -->", slide.content)
+        self.assertNotIn("NOTES", slide.content)
+        self.assertEqual(slide.notes, "Test notes")
+
+    def test_multiple_column_blocks(self):
+        """Test multiple two-column blocks in one slide."""
+        content = """# Title
+
+:::columns
+First left
+|||
+First right
+:::
+
+Some text in between
+
+:::columns
+Second left
+|||
+Second right
+:::"""
+        slide = Slide(content, 0)
+
+        # Should handle multiple blocks
+        self.assertEqual(slide.content.count("<!-- COLUMN:LEFT:START -->"), 2)
+        self.assertIn("First left", slide.content)
+        self.assertIn("First right", slide.content)
+        self.assertIn("Second left", slide.content)
+        self.assertIn("Second right", slide.content)
+
+    def test_two_column_empty_columns(self):
+        """Test two-column transformation with empty columns."""
+        content = """:::columns
+
+|||
+Right only
+:::"""
+        slide = Slide(content, 0)
+
+        # Should still create structure even with empty left column
+        self.assertIn("<!-- COLUMN:LEFT:START -->", slide.content)
+        self.assertIn("Right only", slide.content)
+
 
 class TestSlideParser(unittest.TestCase):
     """Test the SlideParser class."""
