@@ -276,11 +276,18 @@ class SlideShow {
         // Extract left column markdown (before marked.parse)
         const leftStartIdx = markdown.indexOf(leftStart);
         const leftEndIdx = markdown.indexOf(leftEnd);
+        const rightStartIdx = markdown.indexOf(rightStart);
+        const rightEndIdx = markdown.indexOf(rightEnd);
+
+        // Validate all markers are present
+        if (leftStartIdx === -1 || leftEndIdx === -1 || rightStartIdx === -1 || rightEndIdx === -1) {
+            console.warn('Malformed column markers detected, skipping column processing');
+            return null;
+        }
+
         const leftMarkdown = markdown.substring(leftStartIdx + leftStart.length, leftEndIdx).trim();
 
         // Extract right column markdown (before marked.parse)
-        const rightStartIdx = markdown.indexOf(rightStart);
-        const rightEndIdx = markdown.indexOf(rightEnd);
         const rightMarkdown = markdown.substring(rightStartIdx + rightStart.length, rightEndIdx).trim();
 
         // Render each column's markdown separately
