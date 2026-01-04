@@ -173,7 +173,7 @@ const user = cache.get('user');
 ### Process Flow
 
 ```mermaid
-graph LR
+graph
     A[Input] --> B[Validate]
     B --> C{Valid?}
     C -->|Yes| D[Process]

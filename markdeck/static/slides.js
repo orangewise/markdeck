@@ -260,6 +260,51 @@ class SlideShow {
         }
     }
 
+    processColumnMarkers(markdown) {
+        // Find and process column markers created by the parser
+        // This must be called BEFORE marked.parse() to preserve the markdown
+        const leftStart = '<!-- COLUMN:LEFT:START -->';
+        const leftEnd = '<!-- COLUMN:LEFT:END -->';
+        const rightStart = '<!-- COLUMN:RIGHT:START -->';
+        const rightEnd = '<!-- COLUMN:RIGHT:END -->';
+
+        // Check if this slide has column markers
+        if (!markdown.includes(leftStart)) {
+            return null; // No columns, caller should parse normally
+        }
+
+        // Extract left column markdown (before marked.parse)
+        const leftStartIdx = markdown.indexOf(leftStart);
+        const leftEndIdx = markdown.indexOf(leftEnd);
+        const leftMarkdown = markdown.substring(leftStartIdx + leftStart.length, leftEndIdx).trim();
+
+        // Extract right column markdown (before marked.parse)
+        const rightStartIdx = markdown.indexOf(rightStart);
+        const rightEndIdx = markdown.indexOf(rightEnd);
+        const rightMarkdown = markdown.substring(rightStartIdx + rightStart.length, rightEndIdx).trim();
+
+        // Render each column's markdown separately
+        const leftHtml = marked.parse(leftMarkdown);
+        const rightHtml = marked.parse(rightMarkdown);
+
+        // Create the two-column HTML structure
+        const columnsHtml = `
+            <div class="columns-container">
+                <div class="column-left">${leftHtml}</div>
+                <div class="column-right">${rightHtml}</div>
+            </div>
+        `;
+
+        // Get content before and after columns, and parse them separately
+        const beforeColumns = markdown.substring(0, leftStartIdx).trim();
+        const afterColumns = markdown.substring(rightEndIdx + rightEnd.length).trim();
+
+        const beforeHtml = beforeColumns ? marked.parse(beforeColumns) : '';
+        const afterHtml = afterColumns ? marked.parse(afterColumns) : '';
+
+        return beforeHtml + columnsHtml + afterHtml;
+    }
+
     showSlide(index) {
         if (index < 0 || index >= this.totalSlides) {
             return;
@@ -268,8 +313,15 @@ class SlideShow {
         this.currentSlideIndex = index;
         const slide = this.slides[index];
 
-        // Render markdown
-        this.elements.slideContent.innerHTML = marked.parse(slide.content);
+        // Process column markers if present (BEFORE parsing)
+        let html = this.processColumnMarkers(slide.content);
+
+        // If no columns, parse markdown normally
+        if (html === null) {
+            html = marked.parse(slide.content);
+        }
+
+        this.elements.slideContent.innerHTML = html;
 
         // Rewrite relative image paths to use /assets/ endpoint
         this.elements.slideContent.querySelectorAll('img').forEach((img) => {

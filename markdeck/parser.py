@@ -4,8 +4,6 @@ import re
 from pathlib import Path
 from typing import Any
 
-import markdown
-
 
 class Slide:
     """Represents a single slide in a presentation."""
@@ -41,7 +39,7 @@ class Slide:
 
     def _transform_columns(self) -> None:
         """
-        Transform column syntax into HTML div structure.
+        Transform column syntax into marker format for frontend processing.
 
         Converts:
             :::columns
@@ -50,13 +48,35 @@ class Slide:
             Right content
             :::
 
-        Into HTML divs with pre-rendered markdown content
+        Into special markers that the frontend will process:
+            <!-- COLUMN:LEFT:START -->
+            Left content (markdown)
+            <!-- COLUMN:LEFT:END -->
+            <!-- COLUMN:RIGHT:START -->
+            Right content (markdown)
+            <!-- COLUMN:RIGHT:END -->
+
+        The frontend (slides.js) will find these markers and render the markdown
+        in each column, allowing mermaid diagrams and other features to work.
+
+        Note: Code blocks are protected from transformation to avoid transforming
+        example column syntax inside code blocks.
         """
+        # First, protect code blocks by replacing them with placeholders
+        code_blocks = []
+        code_block_pattern = r"```.*?```"
+
+        def save_code_block(match):
+            code_blocks.append(match.group(0))
+            return f"__CODE_BLOCK_{len(code_blocks) - 1}__"
+
+        # Save all code blocks
+        protected_content = re.sub(
+            code_block_pattern, save_code_block, self.content, flags=re.DOTALL
+        )
+
         # Pattern to match column blocks (more forgiving with whitespace)
         column_pattern = r":::columns\s*\n(.*?)\s*\n:::"
-
-        # Create markdown renderer with extensions
-        md = markdown.Markdown(extensions=["extra", "codehilite", "fenced_code"])
 
         def replace_columns(match):
             content = match.group(1)
@@ -67,25 +87,30 @@ class Slide:
                 left_content = parts[0].strip()
                 right_content = parts[1].strip()
 
-                # Render each column's markdown to HTML
-                # Reset the markdown instance for each column to avoid state issues
-                md.reset()
-                left_html = md.convert(left_content)
-                md.reset()
-                right_html = md.convert(right_content)
-
-                # Create HTML structure that marked.js will pass through
+                # Create marker structure that preserves markdown
+                # The frontend will process these markers after marked.js runs
                 return (
-                    '<div class="columns-container">\n'
-                    f'<div class="column-left">\n{left_html}\n</div>\n'
-                    f'<div class="column-right">\n{right_html}\n</div>\n'
-                    '</div>'
+                    "<!-- COLUMN:LEFT:START -->\n"
+                    f"{left_content}\n"
+                    "<!-- COLUMN:LEFT:END -->\n"
+                    "<!-- COLUMN:RIGHT:START -->\n"
+                    f"{right_content}\n"
+                    "<!-- COLUMN:RIGHT:END -->"
                 )
             else:
                 # If no separator found, return original content
                 return match.group(0)
 
-        self.content = re.sub(column_pattern, replace_columns, self.content, flags=re.DOTALL)
+        # Transform columns in the protected content
+        protected_content = re.sub(
+            column_pattern, replace_columns, protected_content, flags=re.DOTALL
+        )
+
+        # Restore code blocks
+        for i, code_block in enumerate(code_blocks):
+            protected_content = protected_content.replace(f"__CODE_BLOCK_{i}__", code_block)
+
+        self.content = protected_content
 
     def to_dict(self) -> dict[str, Any]:
         """
