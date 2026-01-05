@@ -1,0 +1,89 @@
+{
+  "name": "MarkDeck",
+  "description": "A lightweight, markdown-based presentation tool that runs locally with hot reload, grid view, syntax highlighting, mermaid diagrams, and math equations.",
+  "excludeFiles": [
+    "LICENSE",
+    "CHANGELOG.md",
+    ".gitignore",
+    ".python-version",
+    "publish.sh",
+    "capture_screenshots.py",
+    "package.json",
+    "uv.lock"
+  ],
+  "excludeFolders": [
+    ".venv",
+    ".git",
+    ".github",
+    "node_modules",
+    "dist",
+    "build",
+    "__pycache__",
+    ".pytest_cache",
+    ".ruff_cache",
+    "screenshots",
+    "examples/images"
+  ],
+  "rules": [
+    "Always use `---` on its own line with blank lines before and after to separate slides",
+    "Specify language for code blocks to enable syntax highlighting: ```python not just ```",
+    "Use `:::columns` with `|||` separator (exactly 3 pipes) and `:::` to close for two-column layouts",
+    "Speaker notes must start with `<!--NOTES:` and end with `-->`",
+    "Keep slides concise: 3-5 bullet points per slide maximum",
+    "First slide should use `#` heading, all other slides use `##` heading",
+    "Use `.venv/bin/markdeck` or activate venv before running commands",
+    "Always use `uv` for package management, never pip directly (this is a uv-based venv)",
+    "Start server with `markdeck present slides.md --watch` for hot reload during development",
+    "For mermaid diagrams, use code blocks with `mermaid` language identifier",
+    "Math equations: use $...$ for inline and $$...$$ for display math (KaTeX syntax)",
+    "Two-column content is processed before markdown rendering, so mermaid/code work correctly in columns",
+    "Grid view: Press 'O' to toggle, useful for navigation in presentations",
+    "Keyboard shortcuts: → (next), ← (prev), Home (first), End (last), T (theme), F (fullscreen), ? (help)"
+  ],
+  "importantFiles": [
+    "README.md",
+    "LLM_PRESENTATION_GUIDE.md",
+    "MARKDECK_SYNTAX_QUICK_REFERENCE.md",
+    "CLAUDE.md",
+    "examples/templates/README.md",
+    "examples/features.md"
+  ],
+  "documentation": {
+    "getting-started": "README.md",
+    "llm-guide": "LLM_PRESENTATION_GUIDE.md",
+    "syntax-reference": "MARKDECK_SYNTAX_QUICK_REFERENCE.md",
+    "developer-guide": "CLAUDE.md",
+    "templates": "examples/templates/README.md",
+    "examples": [
+      "examples/features.md",
+      "examples/code-examples.md",
+      "examples/templates/simple-presentation.md",
+      "examples/templates/technical-talk.md",
+      "examples/templates/tutorial-workshop.md",
+      "examples/templates/product-demo.md"
+    ]
+  },
+  "categories": [
+    "presentation",
+    "markdown",
+    "slides",
+    "documentation",
+    "python",
+    "fastapi"
+  ],
+  "keywords": [
+    "presentations",
+    "markdown",
+    "slides",
+    "slideshow",
+    "presenter",
+    "mermaid",
+    "syntax-highlighting",
+    "hot-reload",
+    "grid-view",
+    "speaker-notes",
+    "two-column-layout",
+    "math-equations",
+    "katex"
+  ]
+}

@@ -466,16 +466,53 @@ ruff format markdeck/ tests/
 Check out the `examples/` directory for sample presentations:
 
 - **features.md**: Comprehensive feature showcase
-- **two-column-examples.md**: Two-column layout examples
 - **code-examples.md**: Syntax highlighting demo
+- **templates/**: Ready-to-use templates for common presentation types
 
 Try them out:
 
 ```bash
 markdeck present examples/features.md
-markdeck present examples/two-column-examples.md
 markdeck present examples/code-examples.md
+markdeck present examples/templates/technical-talk.md
 ```
+
+## 🤖 AI-Powered Presentation Creation
+
+MarkDeck includes comprehensive documentation for LLMs and AI assistants to help you create professional presentations quickly.
+
+### For LLMs (Claude Code, Cursor, etc.)
+
+- **[LLM Presentation Guide](LLM_PRESENTATION_GUIDE.md)**: Complete guide with best practices, patterns, and templates
+- **[Syntax Quick Reference](MARKDECK_SYNTAX_QUICK_REFERENCE.md)**: Concise syntax reference with examples
+- **[Ready-to-Use Templates](examples/templates/)**: Four production-ready templates for common presentation types
+
+### Context7 Integration
+
+MarkDeck is integrated with [Context7](https://context7.com), an MCP server that provides up-to-date documentation to LLMs and AI code editors.
+
+**To use MarkDeck with Context7:**
+
+1. Install Context7 MCP server in your AI editor (Cursor, Claude Code, etc.)
+2. Simply mention "use context7" in your prompt when asking for MarkDeck presentations
+3. Get accurate, up-to-date MarkDeck syntax and best practices automatically
+
+**Example prompt:**
+```
+Using context7, create a technical talk about Python async/await
+with code examples and diagrams using MarkDeck
+```
+
+The LLM will automatically access current MarkDeck documentation, syntax, and templates to create professional presentations.
+
+### Available Templates
+
+- **simple-presentation.md**: Quick 5-10 slide template
+- **technical-talk.md**: 15-30 min technical deep-dive with code examples
+- **tutorial-workshop.md**: 30-90 min hands-on workshop with exercises
+- **product-demo.md**: Product demonstration/sales presentation
+
+See [examples/templates/](examples/templates/) for details.
 
 ## 🗺️ Roadmap
 
