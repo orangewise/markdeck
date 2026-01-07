@@ -2,6 +2,34 @@
 
 **Purpose:** Create professional MarkDeck presentations with proper syntax, structure, and best practices.
 
+## What is MarkDeck?
+
+MarkDeck is a lightweight, markdown-based presentation tool that runs locally. It features:
+- Hot reload for live editing
+- Grid view for slide navigation (press 'O')
+- Multiple themes (dark/light/beige, press 'T')
+- Syntax highlighting for code blocks
+- Mermaid diagram support
+- Math equations (KaTeX)
+- Two-column layouts
+- Speaker notes
+
+**Installation:**
+```bash
+# Using uv (recommended)
+uv pip install markdeck
+
+# Using pip
+pip install markdeck
+
+# Run a presentation
+markdeck present slides.md --watch
+```
+
+**Links:**
+- PyPI: https://pypi.org/project/markdeck/
+- GitHub: https://github.com/orangewise/markdeck
+
 ## Overview
 
 This skill helps you create markdown-based presentations using MarkDeck. You'll guide users through creating slides with proper formatting, code examples, diagrams, and layouts.
@@ -335,25 +363,91 @@ Right content
 
 ### Mermaid Diagrams
 
+MarkDeck supports multiple Mermaid diagram types for visualizing concepts:
+
 **Flowchart:**
 ````markdown
 ```mermaid
 graph TD
     A[Start] --> B{Decision}
-    B -->|Yes| C[Action]
+    B -->|Yes| C[Action 1]
+    B -->|No| D[Action 2]
+    C --> E[End]
+    D --> E
 ```
 ````
+
+**Direction options:** `TD` (top-down), `LR` (left-right), `BT` (bottom-top), `RL` (right-left)
 
 **Sequence Diagram:**
 ````markdown
 ```mermaid
 sequenceDiagram
+    participant User
+    participant System
+    participant Database
     User->>System: Request
+    System->>Database: Query
+    Database-->>System: Result
     System-->>User: Response
 ```
 ````
 
-**Other types:** `classDiagram`, `stateDiagram-v2`, `pie`, `gitGraph`
+**Class Diagram:**
+````markdown
+```mermaid
+classDiagram
+    class Animal {
+        +String name
+        +int age
+        +makeSound()
+    }
+    class Dog {
+        +String breed
+        +bark()
+    }
+    Animal <|-- Dog
+```
+````
+
+**State Diagram:**
+````markdown
+```mermaid
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> Processing
+    Processing --> Complete
+    Processing --> Error
+    Complete --> [*]
+    Error --> [*]
+```
+````
+
+**Pie Chart:**
+````markdown
+```mermaid
+pie title Distribution
+    "Category A" : 45
+    "Category B" : 30
+    "Category C" : 25
+```
+````
+
+**Git Graph:**
+````markdown
+```mermaid
+gitGraph
+    commit
+    commit
+    branch develop
+    checkout develop
+    commit
+    commit
+    checkout main
+    merge develop
+    commit
+```
+````
 
 ### Math Equations (KaTeX)
 ```markdown
@@ -486,18 +580,21 @@ To test your presentation:
 The --watch flag enables hot reload so you can edit and see changes immediately.
 ```
 
-## Resources for Reference
+## Keyboard Shortcuts Reference
 
-**Guides:**
-- `LLM_PRESENTATION_GUIDE.md` - Comprehensive guide
-- `MARKDECK_SYNTAX_QUICK_REFERENCE.md` - Quick syntax lookup
-- `examples/templates/` - Ready-to-use templates
+Tell users about these helpful shortcuts:
 
-**Templates:**
-- `simple-presentation.md` - Quick talks
-- `technical-talk.md` - Technical deep-dives
-- `tutorial-workshop.md` - Workshops
-- `product-demo.md` - Product demos
+| Key | Action |
+|-----|--------|
+| `→` / `Space` / `PageDown` | Next slide |
+| `←` / `PageUp` | Previous slide |
+| `Home` | First slide |
+| `End` | Last slide |
+| `O` | Toggle grid view |
+| `T` | Cycle themes (dark/light/beige) |
+| `F` | Toggle fullscreen |
+| `?` | Show help |
+| `Esc` | Exit overlay/fullscreen |
 
 ## Final Checklist Before Delivery
 
