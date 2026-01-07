@@ -558,11 +558,6 @@ class SlideShow {
                 gridSlide.classList.add('current');
             }
 
-            // Apply width mode class to grid slide for different aspect ratios
-            if (slide.width_mode) {
-                gridSlide.classList.add(`${slide.width_mode}-mode`);
-            }
-
             // Add slide number badge
             const slideNumber = document.createElement('div');
             slideNumber.className = 'grid-slide-number';

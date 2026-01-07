@@ -492,25 +492,6 @@ body.fullscreen:hover .progress {
     margin: 0.5rem auto !important;
 }
 
-/* Wide slides in grid view - indicate with different aspect ratio */
-.grid-slide.wide-mode {
-    aspect-ratio: 21 / 9;
-}
-
-.grid-slide.full-mode {
-    aspect-ratio: 24 / 9;
-}
-
-.grid-slide.ultra-wide-mode {
-    aspect-ratio: 32 / 9;
-}
-
-.grid-slide.wide-mode .grid-slide-content,
-.grid-slide.full-mode .grid-slide-content,
-.grid-slide.ultra-wide-mode .grid-slide-content {
-    font-size: 0.6rem;
-}
-
 /* Responsive grid */
 @media (max-width: 1200px) {
     .grid-container {
