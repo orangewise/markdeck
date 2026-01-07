@@ -160,10 +160,10 @@ This slide uses `<!--SLIDE:wide-->` for better table display:
 
 | Feature | Free Tier | Basic | Pro | Enterprise | API Access | Custom | Notes |
 |---------|-----------|-------|-----|------------|------------|--------|-------|
-| Users | 5 | 25 | 100 | Unlimited | ✓ | ✓ | Contact sales |
-| Storage | 1GB | 10GB | 100GB | 1TB | 10TB | Custom | Expandable |
-| Support | Community | Email | Priority | 24/7 | 24/7 | Dedicated | SLA included |
-| Features | Basic | Standard | Advanced | All | All + API | Custom | Integrations |
+| Users | 5 | 25 | 100 | Unlimited | ✓ | ✓ | Contact sales for enterprise pricing and volume discounts |
+| Storage | 1GB | 10GB | 100GB | 1TB | 10TB | Custom | Expandable storage with automatic scaling and backup options |
+| Support | Community | Email | Priority | 24/7 | 24/7 | Dedicated | SLA included with guaranteed response times and escalation |
+| Features | Basic | Standard | Advanced | All | All + API | Custom | Integrations available with major platforms and custom webhooks |
 
 **Available modes**: `wide` (90% viewport), `full` (95%), `ultra-wide` (98%)
 
