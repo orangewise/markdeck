@@ -34,11 +34,12 @@ class Slide:
         Returns:
             Width mode ('wide', 'full', 'ultra-wide') or None
         """
-        pattern = r"<!--\s*SLIDE:(wide|full|ultra-wide)\s*-->"
-        match = re.search(pattern, self.content, re.IGNORECASE)
+        # Only match directive at the start of content (after optional whitespace)
+        pattern = r"^\s*<!--\s*SLIDE:(wide|full|ultra-wide)\s*-->\s*"
+        match = re.match(pattern, self.content, re.IGNORECASE)
         if match:
             mode = match.group(1).lower()
-            # Remove the directive from content
+            # Remove only the directive at the start
             self.content = re.sub(pattern, "", self.content, flags=re.IGNORECASE)
             self.content = self.content.strip()
             return mode

@@ -156,7 +156,7 @@ This expands the slide to use 90% of the viewport width.
 
 ## Wide Table Example
 
-This slide uses `<!--SLIDE:wide-->` for better table display:
+This slide demonstrates the wide mode - the directive `<!--SLIDE:wide-->` was placed at the top of this slide:
 
 | Feature | Free Tier | Basic | Pro | Enterprise | API Access | Custom | Notes |
 |---------|-----------|-------|-----|------------|------------|--------|-------|
