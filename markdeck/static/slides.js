@@ -312,6 +312,35 @@ class SlideShow {
         return beforeHtml + columnsHtml + afterHtml;
     }
 
+    applyWidthMode(widthMode) {
+        const container = this.elements.slideContainer;
+        const content = this.elements.slideContent;
+
+        // Reset previous modes
+        container.classList.remove('wide-mode', 'full-mode', 'ultra-wide-mode');
+        content.classList.remove('wide-mode', 'full-mode', 'ultra-wide-mode');
+
+        if (!widthMode) {
+            return; // Normal slide (1200px max-width)
+        }
+
+        // Apply the appropriate mode
+        switch (widthMode) {
+            case 'wide':
+                container.classList.add('wide-mode');
+                content.classList.add('wide-mode');
+                break;
+            case 'full':
+                container.classList.add('full-mode');
+                content.classList.add('full-mode');
+                break;
+            case 'ultra-wide':
+                container.classList.add('ultra-wide-mode');
+                content.classList.add('ultra-wide-mode');
+                break;
+        }
+    }
+
     showSlide(index) {
         if (index < 0 || index >= this.totalSlides) {
             return;
@@ -319,6 +348,9 @@ class SlideShow {
 
         this.currentSlideIndex = index;
         const slide = this.slides[index];
+
+        // Apply width mode to slide container and content
+        this.applyWidthMode(slide.width_mode);
 
         // Process column markers if present (BEFORE parsing)
         let html = this.processColumnMarkers(slide.content);
@@ -524,6 +556,11 @@ class SlideShow {
             gridSlide.className = 'grid-slide';
             if (index === this.currentSlideIndex) {
                 gridSlide.classList.add('current');
+            }
+
+            // Apply width mode class to grid slide for different aspect ratios
+            if (slide.width_mode) {
+                gridSlide.classList.add(`${slide.width_mode}-mode`);
             }
 
             // Add slide number badge

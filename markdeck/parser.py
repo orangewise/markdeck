@@ -18,8 +18,31 @@ class Slide:
         """
         self.content = content.strip()
         self.index = index
+        self.width_mode = self._extract_width_mode()
         self.notes = self._extract_notes()
         self._transform_columns()
+
+    def _extract_width_mode(self) -> str | None:
+        """
+        Extract slide width mode directive.
+
+        Supports:
+        - <!--SLIDE:wide--> (90% viewport)
+        - <!--SLIDE:full--> (95% viewport)
+        - <!--SLIDE:ultra-wide--> (98% viewport)
+
+        Returns:
+            Width mode ('wide', 'full', 'ultra-wide') or None
+        """
+        pattern = r"<!--\s*SLIDE:(wide|full|ultra-wide)\s*-->"
+        match = re.search(pattern, self.content, re.IGNORECASE)
+        if match:
+            mode = match.group(1).lower()
+            # Remove the directive from content
+            self.content = re.sub(pattern, "", self.content, flags=re.IGNORECASE)
+            self.content = self.content.strip()
+            return mode
+        return None
 
     def _extract_notes(self) -> str:
         """
@@ -123,6 +146,7 @@ class Slide:
             "id": self.index,
             "content": self.content,
             "notes": self.notes,
+            "width_mode": self.width_mode,
         }
 
 

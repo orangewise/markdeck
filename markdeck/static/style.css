@@ -67,6 +67,50 @@ body {
     line-height: 1.6;
 }
 
+/* Wide slide modes */
+.slide-container.wide-mode {
+    padding: 40px 30px;
+}
+
+.slide-content.wide-mode {
+    max-width: 90vw;
+    font-size: 1.6rem;
+}
+
+.slide-container.full-mode {
+    padding: 30px 20px;
+}
+
+.slide-content.full-mode {
+    max-width: 95vw;
+    font-size: 1.5rem;
+}
+
+.slide-container.ultra-wide-mode {
+    padding: 20px 10px;
+}
+
+.slide-content.ultra-wide-mode {
+    max-width: 98vw;
+    font-size: 1.4rem;
+}
+
+/* Table improvements in wide modes */
+.slide-content.wide-mode table,
+.slide-content.full-mode table,
+.slide-content.ultra-wide-mode table {
+    width: 100%;
+}
+
+.slide-content.wide-mode th,
+.slide-content.wide-mode td,
+.slide-content.full-mode th,
+.slide-content.full-mode td,
+.slide-content.ultra-wide-mode th,
+.slide-content.ultra-wide-mode td {
+    padding: 0.6rem;
+}
+
 /* Markdown styling */
 .slide-content h1 {
     font-size: 3.5rem;
@@ -446,6 +490,25 @@ body.fullscreen:hover .progress {
     max-width: 100% !important;
     height: auto !important;
     margin: 0.5rem auto !important;
+}
+
+/* Wide slides in grid view - indicate with different aspect ratio */
+.grid-slide.wide-mode {
+    aspect-ratio: 21 / 9;
+}
+
+.grid-slide.full-mode {
+    aspect-ratio: 24 / 9;
+}
+
+.grid-slide.ultra-wide-mode {
+    aspect-ratio: 32 / 9;
+}
+
+.grid-slide.wide-mode .grid-slide-content,
+.grid-slide.full-mode .grid-slide-content,
+.grid-slide.ultra-wide-mode .grid-slide-content {
+    font-size: 0.6rem;
 }
 
 /* Responsive grid */

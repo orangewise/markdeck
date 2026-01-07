@@ -140,6 +140,35 @@ HAVING order_count > 5;
 
 ---
 
+## Wide Slide Mode
+
+For slides with wide tables or content, use the `<!--SLIDE:wide-->` directive:
+
+```markdown
+<!--SLIDE:wide-->
+```
+
+This expands the slide to use 90% of the viewport width.
+
+---
+
+<!--SLIDE:wide-->
+
+## Wide Table Example
+
+This slide uses `<!--SLIDE:wide-->` for better table display:
+
+| Feature | Free Tier | Basic | Pro | Enterprise | API Access | Custom | Notes |
+|---------|-----------|-------|-----|------------|------------|--------|-------|
+| Users | 5 | 25 | 100 | Unlimited | ✓ | ✓ | Contact sales |
+| Storage | 1GB | 10GB | 100GB | 1TB | 10TB | Custom | Expandable |
+| Support | Community | Email | Priority | 24/7 | 24/7 | Dedicated | SLA included |
+| Features | Basic | Standard | Advanced | All | All + API | Custom | Integrations |
+
+**Available modes**: `wide` (90% viewport), `full` (95%), `ultra-wide` (98%)
+
+---
+
 ## Text Formatting
 
 You can use **bold**, *italic*, ***bold italic***, ~~strikethrough~~, and `inline code`.
