@@ -567,7 +567,13 @@ class SlideShow {
             // Add slide content preview
             const slideContent = document.createElement('div');
             slideContent.className = 'grid-slide-content';
-            slideContent.innerHTML = marked.parse(slide.content);
+
+            // Process column markers if present (same as showSlide)
+            let html = this.processColumnMarkers(slide.content);
+            if (html === null) {
+                html = marked.parse(slide.content);
+            }
+            slideContent.innerHTML = html;
 
             // Rewrite relative image paths to use /assets/ endpoint
             slideContent.querySelectorAll('img').forEach((img) => {
