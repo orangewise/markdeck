@@ -100,8 +100,8 @@ async def capture_screenshots():
         await page.wait_for_selector(".slide-content", timeout=10000)
         await asyncio.sleep(1)
 
-        # Navigate to slide 24 (Two-Column Example: Code & Explanation)
-        for i in range(24):
+        # Navigate to slide 26 (Two-Column Example: Code & Explanation)
+        for i in range(26):
             await page.keyboard.press("ArrowRight")
             await asyncio.sleep(0.2)
 
