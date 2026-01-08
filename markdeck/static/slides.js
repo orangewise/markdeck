@@ -312,6 +312,35 @@ class SlideShow {
         return beforeHtml + columnsHtml + afterHtml;
     }
 
+    applyWidthMode(widthMode) {
+        const container = this.elements.slideContainer;
+        const content = this.elements.slideContent;
+
+        // Reset previous modes
+        container.classList.remove('wide-mode', 'full-mode', 'ultra-wide-mode');
+        content.classList.remove('wide-mode', 'full-mode', 'ultra-wide-mode');
+
+        if (!widthMode) {
+            return; // Normal slide (1200px max-width)
+        }
+
+        // Apply the appropriate mode
+        switch (widthMode) {
+            case 'wide':
+                container.classList.add('wide-mode');
+                content.classList.add('wide-mode');
+                break;
+            case 'full':
+                container.classList.add('full-mode');
+                content.classList.add('full-mode');
+                break;
+            case 'ultra-wide':
+                container.classList.add('ultra-wide-mode');
+                content.classList.add('ultra-wide-mode');
+                break;
+        }
+    }
+
     showSlide(index) {
         if (index < 0 || index >= this.totalSlides) {
             return;
@@ -319,6 +348,9 @@ class SlideShow {
 
         this.currentSlideIndex = index;
         const slide = this.slides[index];
+
+        // Apply width mode to slide container and content
+        this.applyWidthMode(slide.width_mode);
 
         // Process column markers if present (BEFORE parsing)
         let html = this.processColumnMarkers(slide.content);
@@ -535,7 +567,13 @@ class SlideShow {
             // Add slide content preview
             const slideContent = document.createElement('div');
             slideContent.className = 'grid-slide-content';
-            slideContent.innerHTML = marked.parse(slide.content);
+
+            // Process column markers if present (same as showSlide)
+            let html = this.processColumnMarkers(slide.content);
+            if (html === null) {
+                html = marked.parse(slide.content);
+            }
+            slideContent.innerHTML = html;
 
             // Rewrite relative image paths to use /assets/ endpoint
             slideContent.querySelectorAll('img').forEach((img) => {

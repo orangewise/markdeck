@@ -41,11 +41,119 @@ These are notes
         self.assertEqual(result["id"], 0)
         self.assertEqual(result["content"], "# Test")
         self.assertIn("notes", result)
+        self.assertIn("width_mode", result)
+        self.assertIsNone(result["width_mode"])
+
+    def test_slide_to_dict_with_width_mode(self):
+        """Test converting slide with width mode to dictionary."""
+        content = """<!--SLIDE:wide-->
+
+# Test"""
+        slide = Slide(content, 0)
+        result = slide.to_dict()
+
+        self.assertEqual(result["width_mode"], "wide")
+        self.assertEqual(result["id"], 0)
+        self.assertIn("notes", result)
 
     def test_empty_slide(self):
         """Test handling of empty slide."""
         slide = Slide("   \n\n   ", 0)
         self.assertEqual(slide.content, "")
+
+    def test_slide_with_wide_mode(self):
+        """Test slide with wide width mode."""
+        content = """<!--SLIDE:wide-->
+
+# Test Slide
+
+Content here"""
+        slide = Slide(content, 0)
+
+        self.assertEqual(slide.width_mode, "wide")
+        self.assertNotIn("<!--SLIDE:wide-->", slide.content)
+        self.assertIn("# Test Slide", slide.content)
+
+    def test_slide_with_full_mode(self):
+        """Test slide with full width mode."""
+        content = """<!--SLIDE:full-->
+
+# Test Slide"""
+        slide = Slide(content, 0)
+
+        self.assertEqual(slide.width_mode, "full")
+        self.assertNotIn("<!--SLIDE:full-->", slide.content)
+
+    def test_slide_with_ultra_wide_mode(self):
+        """Test slide with ultra-wide width mode."""
+        content = """<!--SLIDE:ultra-wide-->
+
+# Test Slide"""
+        slide = Slide(content, 0)
+
+        self.assertEqual(slide.width_mode, "ultra-wide")
+        self.assertNotIn("<!--SLIDE:ultra-wide-->", slide.content)
+
+    def test_slide_without_width_mode(self):
+        """Test slide without width mode directive."""
+        content = "# Test Slide\n\nContent"
+        slide = Slide(content, 0)
+
+        self.assertIsNone(slide.width_mode)
+
+    def test_width_mode_directive_in_text_preserved(self):
+        """Test that width mode directive in middle of text is preserved."""
+        content = """# Test Slide
+
+This slide uses `<!--SLIDE:wide-->` for better display"""
+        slide = Slide(content, 0)
+
+        # Directive in text should be preserved
+        self.assertIn("<!--SLIDE:wide-->", slide.content)
+        # But width_mode should not be set
+        self.assertIsNone(slide.width_mode)
+
+    def test_width_mode_case_insensitive(self):
+        """Test that width mode directive is case insensitive."""
+        content = """<!--SLIDE:WIDE-->
+
+# Test Slide"""
+        slide = Slide(content, 0)
+
+        self.assertEqual(slide.width_mode, "wide")
+
+    def test_width_mode_with_notes(self):
+        """Test width mode works alongside speaker notes."""
+        content = """<!--SLIDE:wide-->
+
+# Test Slide
+
+Content here
+
+<!--NOTES:
+Test notes
+-->"""
+        slide = Slide(content, 0)
+
+        self.assertEqual(slide.width_mode, "wide")
+        self.assertEqual(slide.notes, "Test notes")
+        self.assertNotIn("<!--SLIDE:wide-->", slide.content)
+        self.assertNotIn("NOTES", slide.content)
+
+    def test_width_mode_with_columns(self):
+        """Test width mode works with two-column layout."""
+        content = """<!--SLIDE:full-->
+
+:::columns
+Left
+|||
+Right
+:::"""
+        slide = Slide(content, 0)
+
+        self.assertEqual(slide.width_mode, "full")
+        self.assertIn("<!-- COLUMN:LEFT:START -->", slide.content)
+        self.assertNotIn("<!--SLIDE:full-->", slide.content)
 
     def test_two_column_transformation_basic(self):
         """Test basic two-column transformation."""

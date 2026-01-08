@@ -91,6 +91,26 @@ async def capture_screenshots():
         await asyncio.sleep(1)
         await page.screenshot(path="screenshots/theme_dark_grid.png")
 
+        # ===== Wide Slide Example Screenshot =====
+        print("\n=== Capturing Wide Slide Example Screenshot ===")
+
+        # Navigate back to beginning
+        print("Navigating to wide slide example...")
+        await page.goto("http://127.0.0.1:8888/")
+        await page.wait_for_selector(".slide-content", timeout=10000)
+        await asyncio.sleep(1)
+
+        # Navigate to slide 11 (Wide Table Example)
+        for i in range(11):
+            await page.keyboard.press("ArrowRight")
+            await asyncio.sleep(0.2)
+
+        await asyncio.sleep(1)
+
+        # Screenshot 10: Wide slide example
+        print("Capturing wide slide example...")
+        await page.screenshot(path="screenshots/wide_slide_example.png")
+
         # ===== Two-Column Layout Screenshots =====
         print("\n=== Capturing Two-Column Layout Screenshots ===")
 
@@ -100,14 +120,14 @@ async def capture_screenshots():
         await page.wait_for_selector(".slide-content", timeout=10000)
         await asyncio.sleep(1)
 
-        # Navigate to slide 24 (Two-Column Example: Code & Explanation)
-        for i in range(24):
+        # Navigate to slide 26 (Two-Column Example: Code & Explanation)
+        for i in range(26):
             await page.keyboard.press("ArrowRight")
             await asyncio.sleep(0.2)
 
         await asyncio.sleep(1)
 
-        # Screenshot 10: Two-column layout example
+        # Screenshot 11: Two-column layout example
         print("Capturing two-column layout (Code & Explanation)...")
         await page.screenshot(path="screenshots/two_column_example.png")
 
@@ -125,6 +145,8 @@ async def capture_screenshots():
         print("  - theme_light.png")
         print("  - theme_dark_grid.png")
         print("  - theme_light_grid.png")
+        print("\nWide Slide Screenshots:")
+        print("  - wide_slide_example.png")
         print("\nTwo-Column Layout Screenshots:")
         print("  - two_column_example.png")
 
