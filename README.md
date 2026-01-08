@@ -15,6 +15,7 @@ A lightweight, markdown-based presentation tool that runs locally.
 - **🔍 Grid View**: Overview all slides at once with interactive thumbnail grid (press `O`)
 - **🎭 Multiple Themes**: Dark, light, and beige themes (press `T` to cycle)
 - **📑 Two-Column Layouts**: Create side-by-side content with easy syntax
+- **📐 Wide Slide Mode**: Expand slides to 90-98% viewport for wide tables and content
 - **💬 Speaker Notes**: Hidden notes visible in terminal
 - **🎯 Syntax Highlighting**: Beautiful code blocks powered by highlight.js
 - **📊 Mermaid Diagrams**: Create flowcharts, sequence diagrams, and more with Mermaid.js
@@ -354,6 +355,35 @@ This recursive function calculates factorials.
 
 See `examples/two-column-examples.md` for comprehensive examples.
 
+### Wide Slide Mode
+
+For slides with wide tables or content that needs more horizontal space, use the `<!--SLIDE:wide-->` directive:
+
+````markdown
+<!--SLIDE:wide-->
+
+## Wide Table Example
+
+| Column 1 | Column 2 | Column 3 | Column 4 | Column 5 | Column 6 |
+|----------|----------|----------|----------|----------|----------|
+| Data     | Data     | Data     | Data     | Data     | Data     |
+````
+
+**Available width modes:**
+- `<!--SLIDE:wide-->` - 90% viewport width
+- `<!--SLIDE:full-->` - 95% viewport width
+- `<!--SLIDE:ultra-wide-->` - 98% viewport width
+
+**Usage:**
+- Place the directive at the very top of the slide (before any content)
+- Only affects the current slide - other slides maintain normal width
+- Perfect for wide tables, comparison charts, or detailed data
+
+**Visual Preview:**
+
+![Wide Slide Example](screenshots/wide_slide_example.png)
+*Wide mode showing a multi-column table with expanded width*
+
 ### Grid View / Slide Overview
 
 MarkDeck provides a grid view for quick navigation and overview of your entire presentation:
@@ -486,6 +516,7 @@ markdeck present examples/code-examples.md
 - [x] PyPI distribution ✓
 - [x] Multiple themes (dark/light/beige) ✓
 - [x] Two-column layouts ✓
+- [x] Wide slide mode ✓
 - [ ] Slide transitions
 - [ ] Media embedding improvements
 
