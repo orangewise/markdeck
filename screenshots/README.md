@@ -42,3 +42,17 @@ python capture_theme_screenshots.py
 ```
 
 **Note:** Local screenshot generation requires Playwright browsers to be installed, which may not work in environments with network restrictions. Use GitHub Actions for reliable screenshot generation.
+
+## Cross-Platform Rendering Differences
+
+Screenshots rendered on different platforms (e.g., macOS vs Linux on GitHub Actions) may produce slightly different pixel output due to:
+
+- **Font rendering** - different font smoothing and anti-aliasing algorithms
+- **Subpixel rendering** - macOS and Linux handle this differently
+- **Browser engine variations** - even the same Chromium version can render slightly differently across platforms
+
+This means comparing screenshots captured locally (macOS) with those from GitHub Actions (Linux) may show 2-4% pixel differences even when the content is identical.
+
+For reliable visual diff comparisons, always capture screenshots in the same environment. The GitHub Actions workflow ensures consistent Linux-based rendering for all committed screenshots.
+
+The `--threshold` option (default: 0.1%) filters out minor rendering noise while still catching real content changes.
