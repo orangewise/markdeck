@@ -67,6 +67,50 @@ body {
     line-height: 1.6;
 }
 
+/* Wide slide modes */
+.slide-container.wide-mode {
+    padding: 40px 30px;
+}
+
+.slide-content.wide-mode {
+    max-width: 90vw;
+    font-size: 1.6rem;
+}
+
+.slide-container.full-mode {
+    padding: 30px 20px;
+}
+
+.slide-content.full-mode {
+    max-width: 95vw;
+    font-size: 1.5rem;
+}
+
+.slide-container.ultra-wide-mode {
+    padding: 20px 10px;
+}
+
+.slide-content.ultra-wide-mode {
+    max-width: 98vw;
+    font-size: 1.4rem;
+}
+
+/* Table improvements in wide modes */
+.slide-content.wide-mode table,
+.slide-content.full-mode table,
+.slide-content.ultra-wide-mode table {
+    width: 100%;
+}
+
+.slide-content.wide-mode th,
+.slide-content.wide-mode td,
+.slide-content.full-mode th,
+.slide-content.full-mode td,
+.slide-content.ultra-wide-mode th,
+.slide-content.ultra-wide-mode td {
+    padding: 0.6rem;
+}
+
 /* Markdown styling */
 .slide-content h1 {
     font-size: 3.5rem;
@@ -78,7 +122,7 @@ body {
     font-size: 2.5rem;
     margin-top: 1.5rem;
     margin-bottom: 0.8rem;
-    color: #6bb6ff;
+    color: var(--h2-color);
 }
 
 .slide-content h3 {
@@ -464,4 +508,49 @@ body.fullscreen:hover .progress {
     .grid-header h2 {
         font-size: 1.5rem;
     }
+}
+
+/* Two-column layout support */
+.columns-container {
+    display: flex;
+    gap: 2rem;
+    width: 100%;
+    align-items: flex-start;
+    margin: 1rem 0;
+}
+
+.column-left,
+.column-right {
+    flex: 1;
+    min-width: 0; /* Prevent flex items from overflowing */
+}
+
+/* Ensure proper spacing within columns */
+.column-left > *:first-child,
+.column-right > *:first-child {
+    margin-top: 0;
+}
+
+.column-left > *:last-child,
+.column-right > *:last-child {
+    margin-bottom: 0;
+}
+
+/* Responsive: stack columns on smaller screens */
+@media (max-width: 768px) {
+    .columns-container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}
+
+/* Column support in grid view */
+.grid-slide-content .columns-container {
+    gap: 0.8rem;
+    margin: 0.3rem 0;
+}
+
+.grid-slide-content .column-left,
+.grid-slide-content .column-right {
+    font-size: 0.7rem;
 }

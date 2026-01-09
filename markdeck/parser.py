@@ -18,7 +18,32 @@ class Slide:
         """
         self.content = content.strip()
         self.index = index
+        self.width_mode = self._extract_width_mode()
         self.notes = self._extract_notes()
+        self._transform_columns()
+
+    def _extract_width_mode(self) -> str | None:
+        """
+        Extract slide width mode directive.
+
+        Supports:
+        - <!--SLIDE:wide--> (90% viewport)
+        - <!--SLIDE:full--> (95% viewport)
+        - <!--SLIDE:ultra-wide--> (98% viewport)
+
+        Returns:
+            Width mode ('wide', 'full', 'ultra-wide') or None
+        """
+        # Only match directive at the start of content (after optional whitespace)
+        pattern = r"^\s*<!--\s*SLIDE:(wide|full|ultra-wide)\s*-->\s*"
+        match = re.match(pattern, self.content, re.IGNORECASE)
+        if match:
+            mode = match.group(1).lower()
+            # Remove only the directive at the start
+            self.content = re.sub(pattern, "", self.content, flags=re.IGNORECASE)
+            self.content = self.content.strip()
+            return mode
+        return None
 
     def _extract_notes(self) -> str:
         """
@@ -36,6 +61,81 @@ class Slide:
             return match.group(1).strip()
         return ""
 
+    def _transform_columns(self) -> None:
+        """
+        Transform column syntax into marker format for frontend processing.
+
+        Converts:
+            :::columns
+            Left content
+            |||
+            Right content
+            :::
+
+        Into special markers that the frontend will process:
+            <!-- COLUMN:LEFT:START -->
+            Left content (markdown)
+            <!-- COLUMN:LEFT:END -->
+            <!-- COLUMN:RIGHT:START -->
+            Right content (markdown)
+            <!-- COLUMN:RIGHT:END -->
+
+        The frontend (slides.js) will find these markers and render the markdown
+        in each column, allowing mermaid diagrams and other features to work.
+
+        Note: Code blocks are protected from transformation to avoid transforming
+        example column syntax inside code blocks.
+        """
+        # First, protect code blocks by replacing them with placeholders
+        code_blocks = []
+        code_block_pattern = r"```.*?```"
+
+        def save_code_block(match):
+            code_blocks.append(match.group(0))
+            return f"__CODE_BLOCK_{len(code_blocks) - 1}__"
+
+        # Save all code blocks
+        protected_content = re.sub(
+            code_block_pattern, save_code_block, self.content, flags=re.DOTALL
+        )
+
+        # Pattern to match column blocks (more forgiving with whitespace)
+        column_pattern = r":::columns\s*\n(.*?)\s*\n:::"
+
+        def replace_columns(match):
+            content = match.group(1)
+            # Split on ||| separator (more forgiving with whitespace)
+            parts = re.split(r"\s*\|\|\|\s*", content, maxsplit=1)
+
+            if len(parts) == 2:
+                left_content = parts[0].strip()
+                right_content = parts[1].strip()
+
+                # Create marker structure that preserves markdown
+                # The frontend will process these markers after marked.js runs
+                return (
+                    "<!-- COLUMN:LEFT:START -->\n"
+                    f"{left_content}\n"
+                    "<!-- COLUMN:LEFT:END -->\n"
+                    "<!-- COLUMN:RIGHT:START -->\n"
+                    f"{right_content}\n"
+                    "<!-- COLUMN:RIGHT:END -->"
+                )
+            else:
+                # If no separator found, return original content
+                return match.group(0)
+
+        # Transform columns in the protected content
+        protected_content = re.sub(
+            column_pattern, replace_columns, protected_content, flags=re.DOTALL
+        )
+
+        # Restore code blocks
+        for i, code_block in enumerate(code_blocks):
+            protected_content = protected_content.replace(f"__CODE_BLOCK_{i}__", code_block)
+
+        self.content = protected_content
+
     def to_dict(self) -> dict[str, Any]:
         """
         Convert slide to dictionary format.
@@ -47,6 +147,7 @@ class Slide:
             "id": self.index,
             "content": self.content,
             "notes": self.notes,
+            "width_mode": self.width_mode,
         }
 
 

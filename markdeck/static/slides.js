@@ -260,6 +260,87 @@ class SlideShow {
         }
     }
 
+    processColumnMarkers(markdown) {
+        // Find and process column markers created by the parser
+        // This must be called BEFORE marked.parse() to preserve the markdown
+        const leftStart = '<!-- COLUMN:LEFT:START -->';
+        const leftEnd = '<!-- COLUMN:LEFT:END -->';
+        const rightStart = '<!-- COLUMN:RIGHT:START -->';
+        const rightEnd = '<!-- COLUMN:RIGHT:END -->';
+
+        // Check if this slide has column markers
+        if (!markdown.includes(leftStart)) {
+            return null; // No columns, caller should parse normally
+        }
+
+        // Extract left column markdown (before marked.parse)
+        const leftStartIdx = markdown.indexOf(leftStart);
+        const leftEndIdx = markdown.indexOf(leftEnd);
+        const rightStartIdx = markdown.indexOf(rightStart);
+        const rightEndIdx = markdown.indexOf(rightEnd);
+
+        // Validate all markers are present
+        if (leftStartIdx === -1 || leftEndIdx === -1 || rightStartIdx === -1 || rightEndIdx === -1) {
+            console.warn('Malformed column markers detected, skipping column processing');
+            return null;
+        }
+
+        const leftMarkdown = markdown.substring(leftStartIdx + leftStart.length, leftEndIdx).trim();
+
+        // Extract right column markdown (before marked.parse)
+        const rightMarkdown = markdown.substring(rightStartIdx + rightStart.length, rightEndIdx).trim();
+
+        // Render each column's markdown separately
+        const leftHtml = marked.parse(leftMarkdown);
+        const rightHtml = marked.parse(rightMarkdown);
+
+        // Create the two-column HTML structure
+        const columnsHtml = `
+            <div class="columns-container">
+                <div class="column-left">${leftHtml}</div>
+                <div class="column-right">${rightHtml}</div>
+            </div>
+        `;
+
+        // Get content before and after columns, and parse them separately
+        const beforeColumns = markdown.substring(0, leftStartIdx).trim();
+        const afterColumns = markdown.substring(rightEndIdx + rightEnd.length).trim();
+
+        const beforeHtml = beforeColumns ? marked.parse(beforeColumns) : '';
+        const afterHtml = afterColumns ? marked.parse(afterColumns) : '';
+
+        return beforeHtml + columnsHtml + afterHtml;
+    }
+
+    applyWidthMode(widthMode) {
+        const container = this.elements.slideContainer;
+        const content = this.elements.slideContent;
+
+        // Reset previous modes
+        container.classList.remove('wide-mode', 'full-mode', 'ultra-wide-mode');
+        content.classList.remove('wide-mode', 'full-mode', 'ultra-wide-mode');
+
+        if (!widthMode) {
+            return; // Normal slide (1200px max-width)
+        }
+
+        // Apply the appropriate mode
+        switch (widthMode) {
+            case 'wide':
+                container.classList.add('wide-mode');
+                content.classList.add('wide-mode');
+                break;
+            case 'full':
+                container.classList.add('full-mode');
+                content.classList.add('full-mode');
+                break;
+            case 'ultra-wide':
+                container.classList.add('ultra-wide-mode');
+                content.classList.add('ultra-wide-mode');
+                break;
+        }
+    }
+
     showSlide(index) {
         if (index < 0 || index >= this.totalSlides) {
             return;
@@ -268,8 +349,18 @@ class SlideShow {
         this.currentSlideIndex = index;
         const slide = this.slides[index];
 
-        // Render markdown
-        this.elements.slideContent.innerHTML = marked.parse(slide.content);
+        // Apply width mode to slide container and content
+        this.applyWidthMode(slide.width_mode);
+
+        // Process column markers if present (BEFORE parsing)
+        let html = this.processColumnMarkers(slide.content);
+
+        // If no columns, parse markdown normally
+        if (html === null) {
+            html = marked.parse(slide.content);
+        }
+
+        this.elements.slideContent.innerHTML = html;
 
         // Rewrite relative image paths to use /assets/ endpoint
         this.elements.slideContent.querySelectorAll('img').forEach((img) => {
@@ -391,7 +482,7 @@ class SlideShow {
 
     cycleTheme() {
         // Define available themes
-        const themes = ['dark', 'light'];
+        const themes = ['dark', 'light', 'beige'];
 
         // Get current theme from localStorage, default to 'dark'
         const currentTheme = localStorage.getItem('markdeck-theme') || 'dark';
@@ -476,7 +567,13 @@ class SlideShow {
             // Add slide content preview
             const slideContent = document.createElement('div');
             slideContent.className = 'grid-slide-content';
-            slideContent.innerHTML = marked.parse(slide.content);
+
+            // Process column markers if present (same as showSlide)
+            let html = this.processColumnMarkers(slide.content);
+            if (html === null) {
+                html = marked.parse(slide.content);
+            }
+            slideContent.innerHTML = html;
 
             // Rewrite relative image paths to use /assets/ endpoint
             slideContent.querySelectorAll('img').forEach((img) => {

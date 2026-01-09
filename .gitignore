@@ -52,3 +52,5 @@ node_modules/
 # Screenshot comparison artifacts
 screenshots/.backup/
 screenshots/diffs/
+.claude-tool-usage-stdin-out.txt
+.claude/settings.local.json

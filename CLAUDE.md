@@ -66,12 +66,12 @@ markdeck/
 │   ├── __main__.py                 # Entry point for `python -m markdeck`
 │   ├── cli.py                      # Click-based CLI interface (312 lines)
 │   ├── server.py                   # FastAPI server (234 lines)
-│   ├── parser.py                   # Markdown slide parser (136 lines)
+│   ├── parser.py                   # Markdown slide parser (211 lines)
 │   ├── watcher.py                  # File watcher for hot reload (38 lines)
 │   └── static/                     # Frontend assets
 │       ├── index.html              # Main presentation viewer (107 lines)
 │       ├── style.css               # Main styles (467 lines)
-│       ├── slides.js               # Presentation controller (541 lines)
+│       ├── slides.js               # Presentation controller (593 lines)
 │       ├── dark.css                # Dark theme variables (14 lines)
 │       └── light.css               # Light theme variables (14 lines)
 │
@@ -91,8 +91,7 @@ markdeck/
 ├── scripts/                         # Utility scripts
 │   └── install.sh                  # SessionStart hook installation script
 │
-├── capture_screenshots.py          # Playwright screenshot script (grid view)
-├── capture_theme_screenshots.py    # Theme screenshot generation (NOT FOUND YET)
+├── capture_screenshots.py          # Playwright screenshot script (grid view and themes)
 ├── pyproject.toml                  # Python project configuration
 ├── package.json                    # Node.js config (for jest, if used)
 ├── publish.sh                      # PyPI publishing script
@@ -296,10 +295,11 @@ File Change ─▶ watchfiles ─▶ watcher.py ─▶ notify_clients_reload() �
 
 **Classes:**
 - `Slide` - Represents a single slide
-  - `content` - Markdown content (notes removed)
+  - `content` - Markdown content (notes and columns removed/transformed)
   - `notes` - Speaker notes
   - `index` - Slide number (0-based)
   - `_extract_notes()` - Extract `<!--NOTES:...-->` comments
+  - `_transform_columns()` - Transform `:::columns` syntax into HTML comment markers
   - `to_dict()` - Convert to JSON-serializable dict
 
 - `SlideParser` - Parse markdown into slides
@@ -310,6 +310,29 @@ File Change ─▶ watchfiles ─▶ watcher.py ─▶ notify_clients_reload() �
   - `to_json()` - Return full JSON with slides and metadata
 
 **Slide Delimiter:** Slides are separated by `---` on its own line
+
+**Two-Column Layout Support:**
+- Syntax: `:::columns` ... `|||` ... `:::`
+- The `_transform_columns()` method converts this syntax into HTML comment markers
+- Markdown content is preserved (not pre-rendered) to allow frontend features like mermaid.js to work
+- Code blocks are protected from transformation to prevent transforming example syntax
+- Resulting marker structure sent to frontend:
+  ```
+  <!-- COLUMN:LEFT:START -->
+  Left column markdown (raw)
+  <!-- COLUMN:LEFT:END -->
+  <!-- COLUMN:RIGHT:START -->
+  Right column markdown (raw)
+  <!-- COLUMN:RIGHT:END -->
+  ```
+- The frontend (slides.js) processes markers BEFORE marked.parse(), extracts markdown from each column, parses separately, then builds the HTML structure:
+  ```html
+  <div class="columns-container">
+    <div class="column-left">..rendered HTML..</div>
+    <div class="column-right">..rendered HTML..</div>
+  </div>
+  ```
+- This approach allows mermaid diagrams, code blocks, KaTeX equations, and other features to work correctly in columns
 
 ### 4. Watcher (`markdeck/watcher.py`)
 
@@ -325,13 +348,14 @@ File Change ─▶ watchfiles ─▶ watcher.py ─▶ notify_clients_reload() �
 
 ### 5. Frontend (`markdeck/static/`)
 
-#### `slides.js` (541 lines)
+#### `slides.js` (593 lines)
 
 **Main Class:** `SlideShow`
 
 **Key Methods:**
 - `init()` - Initialize marked.js, load slides, setup listeners
 - `loadSlides()` - Fetch slides from `/api/slides`
+- `processColumnMarkers(markdown)` - Process column markers before parsing (extracts and renders columns)
 - `showSlide(index)` - Render specific slide
 - `nextSlide()` / `prevSlide()` - Navigation
 - `toggleGrid()` - Show/hide grid overview
@@ -453,10 +477,9 @@ Follow these conventions:
 3. Install MarkDeck with `[screenshots]` extra
 4. Install Playwright browsers (chromium)
 5. Start MarkDeck server on port 8888
-6. Run `capture_screenshots.py` (grid view)
-7. Run `capture_theme_screenshots.py` (themes)
-8. Upload screenshots as artifacts
-9. Commit screenshots back to branch (if same repo)
+6. Run `capture_screenshots.py` (captures both grid view and theme screenshots)
+7. Upload screenshots as artifacts
+8. Commit screenshots back to branch (if same repo)
 
 **Important Notes:**
 - Fork PRs only get artifacts, not commits (can't push to fork)
@@ -981,6 +1004,6 @@ uv cache prune --force
 
 ---
 
-**Last Updated:** 2026-01-02
+**Last Updated:** 2026-01-04
 **For Claude Code Sessions**
 **Version:** 1.0 (Comprehensive)

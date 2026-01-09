@@ -140,6 +140,35 @@ HAVING order_count > 5;
 
 ---
 
+## Wide Slide Mode
+
+For slides with wide tables or content, use the `<!--SLIDE:wide-->` directive:
+
+```markdown
+<!--SLIDE:wide-->
+```
+
+This expands the slide to use 90% of the viewport width.
+
+---
+
+<!--SLIDE:wide-->
+
+## Wide Table Example
+
+This slide demonstrates the wide mode - the directive `<!--SLIDE:wide-->` was placed at the top of this slide:
+
+| Feature | Free Tier | Basic | Pro | Enterprise | API Access | Custom | Notes |
+|---------|-----------|-------|-----|------------|------------|--------|-------|
+| Users | 5 | 25 | 100 | Unlimited | ✓ | ✓ | Contact sales for enterprise pricing and volume discounts |
+| Storage | 1GB | 10GB | 100GB | 1TB | 10TB | Custom | Expandable storage with automatic scaling and backup options |
+| Support | Community | Email | Priority | 24/7 | 24/7 | Dedicated | SLA included with guaranteed response times and escalation |
+| Features | Basic | Standard | Advanced | All | All + API | Custom | Integrations available with major platforms and custom webhooks |
+
+**Available modes**: `wide` (90% viewport), `full` (95%), `ultra-wide` (98%)
+
+---
+
 ## Text Formatting
 
 You can use **bold**, *italic*, ***bold italic***, ~~strikethrough~~, and `inline code`.
@@ -305,14 +334,126 @@ stateDiagram-v2
 
 ---
 
-## Two-Column Layout (Planned)
+## Two-Column Layouts
 
-This is a planned feature for future releases.
+MarkDeck now supports two-column layouts!
 
-You'll be able to split slides into columns:
+Use the `:::columns` syntax with `|||` as a separator:
 
-- Left column content
-- Right column content
+```markdown
+:::columns
+Left content
+|||
+Right content
+:::
+```
+
+---
+
+## Two-Column Example: Comparison
+
+:::columns
+### Pros
+
+- Easy to use
+- Fast development
+- Markdown-based
+- Version control friendly
+
+|||
+
+### Cons
+
+- Limited styling
+- No animations
+- Requires technical setup
+- Text-focused
+:::
+
+---
+
+## Two-Column Example: Code & Explanation
+
+:::columns
+### The Code
+
+```python
+def factorial(n):
+    if n <= 1:
+        return 1
+    return n * factorial(n - 1)
+```
+
+|||
+
+### How It Works
+
+This is a **recursive function** that calculates the factorial of a number.
+
+**Base case**: When n ≤ 1, return 1
+
+**Recursive case**: Multiply n by the factorial of (n-1)
+
+**Example**: `factorial(5)` returns 120
+:::
+
+---
+
+## Two-Column Example: Features & Benefits
+
+:::columns
+### Features
+
+- Markdown support
+- Syntax highlighting
+- Hot reload
+- Speaker notes
+- Grid view
+- Math equations
+- Mermaid diagrams
+
+|||
+
+### Benefits
+
+Perfect for technical presentations where you need to show code alongside explanations.
+
+The columns automatically stack on mobile devices for better readability.
+
+You can use **any markdown** in columns: lists, code, images, links, etc.
+:::
+
+---
+
+## Two-Column Example: Image & Description
+
+:::columns
+### Architecture
+
+Modern web applications typically follow a three-tier architecture:
+
+1. **Presentation Layer**: User interface
+2. **Business Logic**: Application logic
+3. **Data Layer**: Database and storage
+
+This separation of concerns makes applications more maintainable and scalable.
+
+|||
+
+### Diagram
+
+```mermaid
+graph TB
+    UI[User Interface]
+    BL[Business Logic]
+    DB[(Database)]
+
+    UI --> BL
+    BL --> DB
+    DB --> BL
+    BL --> UI
+```
+:::
 
 ---
 

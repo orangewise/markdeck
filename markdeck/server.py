@@ -223,7 +223,9 @@ async def log_speaker_notes(notification: SlideNotification) -> dict[str, str]:
             click.echo(click.style("SPEAKER NOTES:", fg="cyan", bold=True))
             click.echo(slide.notes)
         else:
-            click.echo(click.style("(No speaker notes for this slide)", fg="bright_black", italic=True))
+            click.echo(
+                click.style("(No speaker notes for this slide)", fg="bright_black", italic=True)
+            )
 
         click.echo(click.style("━" * 60, fg="blue"))
 
