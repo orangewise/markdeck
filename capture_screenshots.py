@@ -3,7 +3,11 @@
 Screenshot capture script for MarkDeck.
 Captures screenshots of grid view feature and theme variations.
 Includes visual diff comparison with previous screenshots.
+
+Note: First run the MarkDeck server in another terminal:
+    markdeck present examples/features.md --port 8888 --no-browser
 """
+
 import argparse
 import asyncio
 import shutil
@@ -13,6 +17,7 @@ from playwright.async_api import async_playwright
 
 try:
     from image_diff import ImageDiffer
+
     DIFF_AVAILABLE = True
 except ImportError:
     DIFF_AVAILABLE = False
@@ -196,7 +201,8 @@ def compare_screenshots(
     screenshots_dir: Path,
     backup_dir: Path,
     diff_output_dir: Path,
-    threshold: float = 0.1
+    only_changed: bool = False,
+    threshold: float = 5.0,
 ) -> dict:
     """
     Compare new screenshots with backup and generate visual diffs.
@@ -205,7 +211,10 @@ def compare_screenshots(
         screenshots_dir: Directory with new screenshots
         backup_dir: Directory with backup screenshots
         diff_output_dir: Directory to save diff images
-        threshold: Matching threshold (0-1), smaller = more sensitive
+        only_changed: If True, restore unchanged images from backup so only
+                     changed images appear in git diffs
+        threshold: Minimum percentage difference to consider images changed.
+                  Filters out minor rendering noise like anti-aliasing.
 
     Returns:
         Dictionary with comparison results
@@ -218,17 +227,14 @@ def compare_screenshots(
         print("ℹ️  No backup found - all screenshots are new")
         return {}
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("📊 Comparing screenshots with previous version...")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
-    differ = ImageDiffer(threshold=threshold, include_anti_aliasing=False)
+    differ = ImageDiffer(threshold=0.1, include_anti_aliasing=False)
 
     results = differ.compare_directory(
-        backup_dir,
-        screenshots_dir,
-        diff_output_dir,
-        pattern="*.png"
+        backup_dir, screenshots_dir, diff_output_dir, pattern="*.png"
     )
 
     # Print detailed results
@@ -243,12 +249,23 @@ def compare_screenshots(
             continue
 
         result = results[filename.name]
-        if result["status"] == "identical":
+        diff_pct = result.get("diff_percentage", 0)
+
+        # Treat as identical if below threshold
+        is_identical = result["status"] == "identical" or (
+            result["status"] == "different" and diff_pct < threshold
+        )
+
+        if is_identical:
             identical.append(filename.name)
-            print(f"✅ {filename.name}: Identical (no changes)")
+            if result["status"] == "identical":
+                print(f"✅ {filename.name}: Identical (no changes)")
+            else:
+                print(
+                    f"✅ {filename.name}: {diff_pct:.2f}% different (below {threshold}% threshold)"
+                )
         elif result["status"] == "different":
             different.append(filename.name)
-            diff_pct = result["diff_percentage"]
             diff_pixels = result["diff_pixels"]
             print(f"🔄 {filename.name}: {diff_pct:.2f}% different ({diff_pixels:,} pixels)")
             if result.get("diff_image"):
@@ -257,29 +274,37 @@ def compare_screenshots(
             print(f"❌ {filename.name}: {result.get('error', 'Unknown error')}")
 
     # Summary
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("Summary:")
     print(f"  ✅ Identical: {len(identical)}")
     print(f"  🔄 Different: {len(different)}")
     print(f"  🆕 New: {len(new_files)}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
+
+    # Restore unchanged images if --only-changed is set
+    if only_changed and identical:
+        print("🔄 Restoring unchanged images from backup...")
+        for filename in identical:
+            backup_file = backup_dir / filename
+            target_file = screenshots_dir / filename
+            if backup_file.exists():
+                shutil.copy2(backup_file, target_file)
+        print(f"   Restored {len(identical)} unchanged image(s)")
+        print(f"   Only {len(different) + len(new_files)} file(s) will appear in git diff\n")
 
     if len(different) > 0 or len(new_files) > 0:
         print("✅ Screenshots have changes - commit recommended")
     else:
         print("ℹ️  No changes detected - commit not necessary")
 
-    return {
-        "identical": identical,
-        "different": different,
-        "new": new_files,
-        "results": results
-    }
+    return {"identical": identical, "different": different, "new": new_files, "results": results}
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Capture MarkDeck screenshots with optional diff comparison",
+        description="Capture MarkDeck screenshots with optional diff comparison.\n\n"
+        "Note: First run the MarkDeck server in another terminal:\n"
+        "  markdeck present examples/features.md --port 8888 --no-browser",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -292,38 +317,45 @@ Examples:
   # Capture, compare, and save diff images
   python capture_screenshots.py --compare --save-diffs
 
-  # Custom diff threshold (more sensitive)
-  python capture_screenshots.py --compare --threshold 0.05
-        """
+  # Only update changed images (useful for clean PRs)
+  python capture_screenshots.py --only-changed
+
+  # More strict: only consider >10% difference as changed
+  python capture_screenshots.py --only-changed --threshold 10
+        """,
     )
 
     parser.add_argument(
         "--compare",
         action="store_true",
-        help="Compare with previous screenshots and show differences"
+        help="Compare with previous screenshots and show differences",
     )
     parser.add_argument(
-        "--save-diffs",
-        action="store_true",
-        help="Save visual diff images (implies --compare)"
-    )
-    parser.add_argument(
-        "--threshold",
-        type=float,
-        default=0.1,
-        help="Diff threshold 0-1, smaller = more sensitive (default: 0.1)"
+        "--save-diffs", action="store_true", help="Save visual diff images (implies --compare)"
     )
     parser.add_argument(
         "--backup-dir",
         type=Path,
         default=Path("screenshots/.backup"),
-        help="Directory for screenshot backup (default: screenshots/.backup)"
+        help="Directory for screenshot backup (default: screenshots/.backup)",
     )
     parser.add_argument(
         "--diff-dir",
         type=Path,
         default=Path("screenshots/diffs"),
-        help="Directory for diff images (default: screenshots/diffs)"
+        help="Directory for diff images (default: screenshots/diffs)",
+    )
+    parser.add_argument(
+        "--only-changed",
+        action="store_true",
+        help="Only keep changed images; restore unchanged from backup (implies --compare)",
+    )
+    parser.add_argument(
+        "--threshold",
+        type=float,
+        default=0.1,
+        help="Minimum %% difference to consider images changed (default: 0.1). "
+        "Filters out minor rendering noise like anti-aliasing",
     )
 
     args = parser.parse_args()
@@ -333,7 +365,7 @@ Examples:
 
     # Backup existing screenshots if comparison requested
     backed_up = False
-    if args.compare or args.save_diffs:
+    if args.compare or args.save_diffs or args.only_changed:
         backed_up = backup_existing_screenshots(screenshots_dir, args.backup_dir)
 
     # Capture new screenshots
@@ -341,17 +373,14 @@ Examples:
     asyncio.run(capture_screenshots())
 
     # Compare if requested
-    if (args.compare or args.save_diffs) and backed_up:
+    if (args.compare or args.save_diffs or args.only_changed) and backed_up:
         diff_output = args.diff_dir if args.save_diffs else None
         comparison = compare_screenshots(
-            screenshots_dir,
-            args.backup_dir,
-            diff_output,
-            args.threshold
+            screenshots_dir, args.backup_dir, diff_output, args.only_changed, args.threshold
         )
 
         # Clean up backup
-        print(f"\n🗑️  Cleaning up backup directory...")
+        print("\n🗑️  Cleaning up backup directory...")
         shutil.rmtree(args.backup_dir)
-    elif args.compare or args.save_diffs:
+    elif args.compare or args.save_diffs or args.only_changed:
         print("\nℹ️  No previous screenshots to compare - skipping comparison")

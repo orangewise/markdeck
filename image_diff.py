@@ -5,13 +5,13 @@ Visual image diff tool for MarkDeck screenshots.
 Compares two images and generates a visual diff highlighting changed pixels.
 Uses pixelmatch algorithm to detect and visualize differences.
 """
+
 import sys
 from pathlib import Path
-from typing import Tuple
 
 try:
-    from pixelmatch.contrib.PIL import pixelmatch
     from PIL import Image
+    from pixelmatch.contrib.PIL import pixelmatch
 except ImportError:
     print("Error: Required dependencies not installed.")
     print("Install with: uv pip install pixelmatch Pillow --python .venv/bin/python")
@@ -40,7 +40,7 @@ class ImageDiffer:
         img2_path: str | Path,
         diff_output_path: str | Path | None = None,
         diff_color: tuple = (255, 0, 128),  # Pink/magenta
-    ) -> Tuple[int, int, float, bool]:
+    ) -> tuple[int, int, float, bool]:
         """
         Compare two images and optionally create a visual diff.
 
@@ -68,8 +68,8 @@ class ImageDiffer:
             raise FileNotFoundError(f"Image not found: {img2_path}")
 
         # Load images
-        img1 = Image.open(img1_path).convert('RGBA')
-        img2 = Image.open(img2_path).convert('RGBA')
+        img1 = Image.open(img1_path).convert("RGBA")
+        img2 = Image.open(img2_path).convert("RGBA")
 
         # Check dimensions match
         if img1.size != img2.size:
@@ -79,7 +79,7 @@ class ImageDiffer:
             )
 
         # Create diff image
-        img_diff = Image.new('RGBA', img1.size)
+        img_diff = Image.new("RGBA", img1.size)
 
         # Compare and generate visual diff
         mismatch = pixelmatch(
@@ -147,9 +147,7 @@ class ImageDiffer:
                 if diff_output_dir:
                     diff_path = diff_output_dir / f"diff_{img1_path.name}"
 
-                mismatch, total, percentage, match = self.compare(
-                    img1_path, img2_path, diff_path
-                )
+                mismatch, total, percentage, match = self.compare(img1_path, img2_path, diff_path)
 
                 results[img1_path.name] = {
                     "status": "identical" if match else "different",
@@ -195,9 +193,7 @@ Examples:
 
     parser.add_argument("input1", help="First image or directory")
     parser.add_argument("input2", help="Second image or directory")
-    parser.add_argument(
-        "-o", "--output", help="Output path for diff image (file mode only)"
-    )
+    parser.add_argument("-o", "--output", help="Output path for diff image (file mode only)")
     parser.add_argument(
         "--output-dir", help="Output directory for diff images (directory mode only)"
     )
@@ -261,9 +257,7 @@ Examples:
                     different.append(filename)
                     diff_pct = result["diff_percentage"]
                     diff_pixels = result["diff_pixels"]
-                    print(
-                        f"🔄 {filename}: {diff_pct:.2f}% different ({diff_pixels:,} pixels)"
-                    )
+                    print(f"🔄 {filename}: {diff_pct:.2f}% different ({diff_pixels:,} pixels)")
                     if result.get("diff_image"):
                         print(f"   Diff saved: {result['diff_image']}")
                 else:
@@ -271,8 +265,8 @@ Examples:
                     print(f"❌ {filename}: {result.get('error', 'Unknown error')}")
 
             # Summary
-            print(f"\n{'='*60}")
-            print(f"Summary:")
+            print(f"\n{'=' * 60}")
+            print("Summary:")
             print(f"  Identical: {len(identical)}")
             print(f"  Different: {len(different)}")
             print(f"  Errors: {len(errors)}")
@@ -289,7 +283,7 @@ Examples:
             )
 
             # Print results
-            print(f"\n📊 Comparing images:")
+            print("\n📊 Comparing images:")
             print(f"  Image 1: {args.input1}")
             print(f"  Image 2: {args.input2}")
             print(f"  Threshold: {args.threshold}")
@@ -298,7 +292,7 @@ Examples:
             if match:
                 print("✅ Images are identical!")
             else:
-                print(f"🔄 Images are different!")
+                print("🔄 Images are different!")
                 print(f"  Different pixels: {mismatch:,} / {total:,}")
                 print(f"  Difference: {percentage:.2f}%")
 
@@ -317,6 +311,7 @@ Examples:
     except Exception as e:
         print(f"❌ Unexpected error: {e}", file=sys.stderr)
         import traceback
+
         traceback.print_exc()
         sys.exit(2)
 

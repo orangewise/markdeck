@@ -6,7 +6,9 @@ from pathlib import Path
 
 try:
     from PIL import Image
+
     from image_diff import ImageDiffer
+
     DEPENDENCIES_AVAILABLE = True
 except ImportError:
     DEPENDENCIES_AVAILABLE = False
@@ -21,7 +23,7 @@ def create_test_image(path: Path, size: tuple = (100, 100), color: tuple = (255,
         size: Image dimensions (width, height)
         color: RGBA color tuple
     """
-    img = Image.new('RGBA', size, color)
+    img = Image.new("RGBA", size, color)
     img.save(path)
 
 
@@ -33,7 +35,7 @@ def create_different_image(path: Path, size: tuple = (100, 100)):
         path: Path where to save the image
         size: Image dimensions (width, height)
     """
-    img = Image.new('RGBA', size, (255, 0, 0, 255))
+    img = Image.new("RGBA", size, (255, 0, 0, 255))
     # Add a white square in the center to create differences
     pixels = img.load()
     for x in range(40, 60):
@@ -106,9 +108,7 @@ class TestImageDiffer(unittest.TestCase):
         create_different_image(img2_path)
 
         differ = ImageDiffer()
-        mismatch, total, percentage, match = differ.compare(
-            img1_path, img2_path, diff_path
-        )
+        mismatch, total, percentage, match = differ.compare(img1_path, img2_path, diff_path)
 
         self.assertGreater(mismatch, 0)
         self.assertFalse(match)
