@@ -147,6 +147,37 @@ async def capture_screenshots():
         print("Capturing two-column layout (Code & Explanation)...")
         await page.screenshot(path="screenshots/two_column_example.png")
 
+        # ===== Custom Column Width Screenshots =====
+        print("\n=== Capturing Custom Column Width Screenshots ===")
+
+        # Navigate to slide 29 (Custom Width Example: 70/30 Split)
+        print("Navigating to custom width example (70/30)...")
+        await page.goto("http://127.0.0.1:8888/")
+        await page.wait_for_selector(".slide-content", timeout=10000)
+        await asyncio.sleep(1)
+
+        for i in range(29):
+            await page.keyboard.press("ArrowRight")
+            await asyncio.sleep(0.2)
+
+        await asyncio.sleep(1)
+
+        # Screenshot 12: Custom column width 70/30
+        print("Capturing custom column width (70/30 split)...")
+        await page.screenshot(path="screenshots/column_width_70_30.png")
+
+        # Navigate to slide 31 (Custom Width Example: 30/70 Narrow Left)
+        print("Navigating to custom width example (30/70)...")
+        for i in range(2):
+            await page.keyboard.press("ArrowRight")
+            await asyncio.sleep(0.2)
+
+        await asyncio.sleep(1)
+
+        # Screenshot 13: Custom column width 30/70
+        print("Capturing custom column width (30/70 split)...")
+        await page.screenshot(path="screenshots/column_width_30_70.png")
+
         await browser.close()
         print("\n✅ All screenshots captured successfully!")
         print("\nScreenshots saved in: screenshots/")
@@ -165,6 +196,9 @@ async def capture_screenshots():
         print("  - wide_slide_example.png")
         print("\nTwo-Column Layout Screenshots:")
         print("  - two_column_example.png")
+        print("\nCustom Column Width Screenshots:")
+        print("  - column_width_70_30.png")
+        print("  - column_width_30_70.png")
 
 
 def backup_existing_screenshots(screenshots_dir: Path, backup_dir: Path) -> bool:

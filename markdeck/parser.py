@@ -72,8 +72,23 @@ class Slide:
             Right content
             :::
 
+        Or with percentage width:
+            :::columns[60]
+            Left content (60% width)
+            |||
+            Right content (40% width)
+            :::
+
         Into special markers that the frontend will process:
             <!-- COLUMN:LEFT:START -->
+            Left content (markdown)
+            <!-- COLUMN:LEFT:END -->
+            <!-- COLUMN:RIGHT:START -->
+            Right content (markdown)
+            <!-- COLUMN:RIGHT:END -->
+
+        Or with width:
+            <!-- COLUMN:LEFT:START:60 -->
             Left content (markdown)
             <!-- COLUMN:LEFT:END -->
             <!-- COLUMN:RIGHT:START -->
@@ -99,11 +114,13 @@ class Slide:
             code_block_pattern, save_code_block, self.content, flags=re.DOTALL
         )
 
-        # Pattern to match column blocks (more forgiving with whitespace)
-        column_pattern = r":::columns\s*\n(.*?)\s*\n:::"
+        # Pattern to match column blocks with optional width percentage
+        # Matches: :::columns or :::columns[60]
+        column_pattern = r":::columns(?:\[(\d+)\])?\s*\n(.*?)\s*\n:::"
 
         def replace_columns(match):
-            content = match.group(1)
+            width_percent = match.group(1)  # Can be None if no width specified
+            content = match.group(2)
             # Split on ||| separator (more forgiving with whitespace)
             parts = re.split(r"\s*\|\|\|\s*", content, maxsplit=1)
 
@@ -112,9 +129,15 @@ class Slide:
                 right_content = parts[1].strip()
 
                 # Create marker structure that preserves markdown
+                # Include width in left column marker if specified
+                if width_percent:
+                    left_start_marker = f"<!-- COLUMN:LEFT:START:{width_percent} -->"
+                else:
+                    left_start_marker = "<!-- COLUMN:LEFT:START -->"
+
                 # The frontend will process these markers after marked.js runs
                 return (
-                    "<!-- COLUMN:LEFT:START -->\n"
+                    f"{left_start_marker}\n"
                     f"{left_content}\n"
                     "<!-- COLUMN:LEFT:END -->\n"
                     "<!-- COLUMN:RIGHT:START -->\n"

@@ -457,6 +457,122 @@ graph TB
 
 ---
 
+## Two-Column with Custom Width
+
+You can now specify a percentage width for the first column using `:::columns[width]`:
+
+```markdown
+:::columns[70]
+This column gets 70% of the width
+|||
+This column gets the remaining 30%
+:::
+```
+
+The width must be between 1 and 99.
+
+---
+
+## Custom Width Example: 70/30 Split
+
+:::columns[70]
+### Main Content (70%)
+
+This is the primary content area with more space:
+
+- Perfect for detailed explanations
+- Code examples that need more width
+- Main narrative or story
+- Primary visual elements
+
+The wider column draws more attention and is ideal for the most important content on your slide.
+
+|||
+
+### Sidebar (30%)
+
+**Notes**:
+
+- Key points
+- Quick refs
+- Links
+- Tips
+
+Short, concise supporting information.
+:::
+
+---
+
+## Custom Width Example: 60/40 Code Review
+
+:::columns[60]
+### Implementation
+
+```python
+class DataProcessor:
+    def __init__(self, data):
+        self.data = data
+        self.results = []
+
+    def process(self):
+        for item in self.data:
+            result = self.transform(item)
+            self.results.append(result)
+        return self.results
+
+    def transform(self, item):
+        return item.upper()
+```
+
+|||
+
+### Review Notes
+
+**Strengths**:
+- Clear structure
+- Good naming
+- Simple logic
+
+**Suggestions**:
+- Add type hints
+- Handle errors
+- Add docstrings
+- Use list comprehension
+
+**Performance**: O(n) time complexity
+:::
+
+---
+
+## Custom Width Example: 30/70 Narrow Left
+
+:::columns[30]
+### Quick Stats
+
+**Users**: 10K+
+
+**Uptime**: 99.9%
+
+**Response**: <100ms
+
+**Rating**: ⭐⭐⭐⭐⭐
+
+|||
+
+### Detailed Analysis
+
+Our platform has grown significantly over the past year, achieving remarkable metrics:
+
+- **User Growth**: From 1,000 to over 10,000 active users
+- **Reliability**: Maintained 99.9% uptime with zero critical incidents
+- **Performance**: Average API response time under 100ms
+- **Satisfaction**: Consistent 5-star ratings across all review platforms
+
+The success is attributed to our focus on performance, reliability, and user experience. We continue to invest in infrastructure and optimization.
+:::
+
+---
+
 ## Performance
 
 MarkDeck is designed to be:
