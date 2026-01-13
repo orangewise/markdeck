@@ -150,13 +150,13 @@ async def capture_screenshots():
         # ===== Custom Column Width Screenshots =====
         print("\n=== Capturing Custom Column Width Screenshots ===")
 
-        # Navigate to slide 31 (Custom Width Example: 30/70 Narrow Left)
+        # Navigate to slide 32 (Custom Width Example: 30/70 Narrow Left)
         print("Navigating to custom width example (30/70)...")
         await page.goto("http://127.0.0.1:8888/")
         await page.wait_for_selector(".slide-content", timeout=10000)
         await asyncio.sleep(1)
 
-        for i in range(31):
+        for i in range(32):
             await page.keyboard.press("ArrowRight")
             await asyncio.sleep(0.2)
 
