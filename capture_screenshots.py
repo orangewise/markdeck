@@ -150,33 +150,25 @@ async def capture_screenshots():
         # ===== Custom Column Width Screenshots =====
         print("\n=== Capturing Custom Column Width Screenshots ===")
 
-        # Navigate to slide 29 (Custom Width Example: 70/30 Split)
-        print("Navigating to custom width example (70/30)...")
+        # Navigate to slide 31 (Custom Width Example: 30/70 Narrow Left)
+        print("Navigating to custom width example (30/70)...")
         await page.goto("http://127.0.0.1:8888/")
         await page.wait_for_selector(".slide-content", timeout=10000)
         await asyncio.sleep(1)
 
-        for i in range(29):
+        for i in range(31):
             await page.keyboard.press("ArrowRight")
             await asyncio.sleep(0.2)
 
         await asyncio.sleep(1)
 
-        # Screenshot 12: Custom column width 70/30
-        print("Capturing custom column width (70/30 split)...")
+        # Screenshot 12: Custom column width 30/70
+        # Note: Using 70_30 filename but showing 30/70 slide per user request
+        print("Capturing custom column width (30/70 split)...")
         await page.screenshot(path="screenshots/column_width_70_30.png")
 
-        # Navigate to slide 31 (Custom Width Example: 30/70 Narrow Left)
-        print("Navigating to custom width example (30/70)...")
-        for i in range(2):
-            await page.keyboard.press("ArrowRight")
-            await asyncio.sleep(0.2)
-
-        await asyncio.sleep(1)
-
-        # Screenshot 13: Custom column width 30/70
-        print("Capturing custom column width (30/70 split)...")
-        await page.screenshot(path="screenshots/column_width_30_70.png")
+        # Keep the existing 30/70 screenshot (already generated)
+        # No need to regenerate - it's already correct
 
         await browser.close()
         print("\n✅ All screenshots captured successfully!")
