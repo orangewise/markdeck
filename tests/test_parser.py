@@ -280,6 +280,156 @@ Right only
         self.assertIn("<!-- COLUMN:LEFT:START -->", slide.content)
         self.assertIn("Right only", slide.content)
 
+    def test_two_column_with_percentage_width(self):
+        """Test two-column transformation with percentage width."""
+        content = """:::columns[60]
+Left content (60%)
+|||
+Right content (40%)
+:::"""
+        slide = Slide(content, 0)
+
+        # Check that marker structure includes width
+        self.assertIn("<!-- COLUMN:LEFT:START:60 -->", slide.content)
+        self.assertIn("<!-- COLUMN:LEFT:END -->", slide.content)
+        self.assertIn("<!-- COLUMN:RIGHT:START -->", slide.content)
+        self.assertIn("<!-- COLUMN:RIGHT:END -->", slide.content)
+        self.assertIn("Left content (60%)", slide.content)
+        self.assertIn("Right content (40%)", slide.content)
+
+    def test_two_column_with_various_percentages(self):
+        """Test two-column transformation with different percentage values."""
+        # Test 70%
+        content70 = """:::columns[70]
+Left
+|||
+Right
+:::"""
+        slide70 = Slide(content70, 0)
+        self.assertIn("<!-- COLUMN:LEFT:START:70 -->", slide70.content)
+
+        # Test 30%
+        content30 = """:::columns[30]
+Left
+|||
+Right
+:::"""
+        slide30 = Slide(content30, 0)
+        self.assertIn("<!-- COLUMN:LEFT:START:30 -->", slide30.content)
+
+        # Test 50%
+        content50 = """:::columns[50]
+Left
+|||
+Right
+:::"""
+        slide50 = Slide(content50, 0)
+        self.assertIn("<!-- COLUMN:LEFT:START:50 -->", slide50.content)
+
+    def test_two_column_percentage_backward_compatible(self):
+        """Test that columns without percentage width still work (backward compatibility)."""
+        content = """:::columns
+Left content
+|||
+Right content
+:::"""
+        slide = Slide(content, 0)
+
+        # Should use the marker without width suffix
+        self.assertIn("<!-- COLUMN:LEFT:START -->", slide.content)
+        self.assertNotIn("<!-- COLUMN:LEFT:START:", slide.content)
+        self.assertIn("Left content", slide.content)
+        self.assertIn("Right content", slide.content)
+
+    def test_two_column_with_percentage_and_markdown(self):
+        """Test two-column with percentage width and rich markdown."""
+        content = """:::columns[65]
+# Left Heading (65%)
+
+- Item 1
+- Item 2
+
+**Bold text**
+|||
+# Right Heading (35%)
+
+```python
+print("code")
+```
+
+*Italic text*
+:::"""
+        slide = Slide(content, 0)
+
+        # Check that width marker is present
+        self.assertIn("<!-- COLUMN:LEFT:START:65 -->", slide.content)
+        # Check that markdown is preserved
+        self.assertIn("# Left Heading (65%)", slide.content)
+        self.assertIn("# Right Heading (35%)", slide.content)
+        self.assertIn("- Item 1", slide.content)
+        self.assertIn("```python", slide.content)
+        self.assertIn("**Bold text**", slide.content)
+        self.assertIn("*Italic text*", slide.content)
+
+    def test_two_column_percentage_with_notes(self):
+        """Test two-column with percentage width works alongside speaker notes."""
+        content = """:::columns[75]
+Left (75%)
+|||
+Right (25%)
+:::
+
+<!--NOTES:
+Test notes with column widths
+-->"""
+        slide = Slide(content, 0)
+
+        # Both transformations should work
+        self.assertIn("<!-- COLUMN:LEFT:START:75 -->", slide.content)
+        self.assertNotIn("NOTES", slide.content)
+        self.assertEqual(slide.notes, "Test notes with column widths")
+
+    def test_two_column_percentage_with_width_mode(self):
+        """Test two-column with percentage width works with slide width mode."""
+        content = """<!--SLIDE:wide-->
+
+:::columns[60]
+Left (60%)
+|||
+Right (40%)
+:::"""
+        slide = Slide(content, 0)
+
+        # Both features should work together
+        self.assertEqual(slide.width_mode, "wide")
+        self.assertIn("<!-- COLUMN:LEFT:START:60 -->", slide.content)
+        self.assertNotIn("<!--SLIDE:wide-->", slide.content)
+
+    def test_multiple_column_blocks_with_different_widths(self):
+        """Test multiple two-column blocks with different width percentages."""
+        content = """# Title
+
+:::columns[70]
+First left (70%)
+|||
+First right (30%)
+:::
+
+Some text in between
+
+:::columns[40]
+Second left (40%)
+|||
+Second right (60%)
+:::"""
+        slide = Slide(content, 0)
+
+        # Should handle multiple blocks with different widths
+        self.assertIn("<!-- COLUMN:LEFT:START:70 -->", slide.content)
+        self.assertIn("<!-- COLUMN:LEFT:START:40 -->", slide.content)
+        self.assertIn("First left (70%)", slide.content)
+        self.assertIn("Second left (40%)", slide.content)
+
 
 class TestSlideParser(unittest.TestCase):
     """Test the SlideParser class."""

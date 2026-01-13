@@ -263,15 +263,20 @@ class SlideShow {
     processColumnMarkers(markdown) {
         // Find and process column markers created by the parser
         // This must be called BEFORE marked.parse() to preserve the markdown
-        const leftStart = '<!-- COLUMN:LEFT:START -->';
+        const leftStartPattern = /<!-- COLUMN:LEFT:START(?::(\d+))? -->/;
         const leftEnd = '<!-- COLUMN:LEFT:END -->';
         const rightStart = '<!-- COLUMN:RIGHT:START -->';
         const rightEnd = '<!-- COLUMN:RIGHT:END -->';
 
         // Check if this slide has column markers
-        if (!markdown.includes(leftStart)) {
+        const leftStartMatch = markdown.match(leftStartPattern);
+        if (!leftStartMatch) {
             return null; // No columns, caller should parse normally
         }
+
+        // Extract width percentage if present (e.g., "60" from <!-- COLUMN:LEFT:START:60 -->)
+        const leftWidthPercent = leftStartMatch[1] ? parseInt(leftStartMatch[1], 10) : null;
+        const leftStart = leftStartMatch[0];
 
         // Extract left column markdown (before marked.parse)
         const leftStartIdx = markdown.indexOf(leftStart);
@@ -294,11 +299,21 @@ class SlideShow {
         const leftHtml = marked.parse(leftMarkdown);
         const rightHtml = marked.parse(rightMarkdown);
 
-        // Create the two-column HTML structure
+        // Apply width styles if specified
+        let leftStyle = '';
+        let rightStyle = '';
+        if (leftWidthPercent !== null) {
+            // Validate width is between 1 and 99
+            const validWidth = Math.max(1, Math.min(99, leftWidthPercent));
+            leftStyle = ` style="flex: 0 0 ${validWidth}%;"`;
+            rightStyle = ` style="flex: 1;"`;
+        }
+
+        // Create the two-column HTML structure with optional width styles
         const columnsHtml = `
             <div class="columns-container">
-                <div class="column-left">${leftHtml}</div>
-                <div class="column-right">${rightHtml}</div>
+                <div class="column-left"${leftStyle}>${leftHtml}</div>
+                <div class="column-right"${rightStyle}>${rightHtml}</div>
             </div>
         `;
 

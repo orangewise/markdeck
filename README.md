@@ -355,6 +355,59 @@ This recursive function calculates factorials.
 
 See `examples/two-column-examples.md` for comprehensive examples.
 
+### Custom Column Widths
+
+You can specify custom width percentages for two-column layouts to create asymmetric layouts:
+
+````markdown
+:::columns[70]
+### Main Content (70%)
+
+This column gets 70% of the width
+|||
+
+### Sidebar (30%)
+
+This column gets the remaining 30%
+:::
+````
+
+**Features:**
+- Specify left column width as a percentage: `:::columns[width]`
+- Right column automatically gets the remaining width (100 - left%)
+- Width must be between 1 and 99
+- Backward compatible: `:::columns` without width still creates 50/50 split
+- Perfect for layouts with primary content and sidebars
+
+**Common use cases:**
+- **70/30 split**: Wide main content with narrow sidebar for notes or links
+- **60/40 split**: Code reviews with implementation and review comments
+- **30/70 split**: Quick stats or table of contents with detailed content
+
+**Example - 70/30 Layout:**
+
+````markdown
+:::columns[70]
+### Main Content (70%)
+
+- Detailed explanations
+- Code examples that need more width
+- Main narrative
+- Primary visuals
+
+|||
+
+### Sidebar (30%)
+
+**Quick Notes:**
+- Key points
+- References
+- Tips
+:::
+````
+
+See `examples/features.md` for live examples of different column width configurations.
+
 ### Wide Slide Mode
 
 For slides with wide tables or content that needs more horizontal space, use the `<!--SLIDE:wide-->` directive:
@@ -516,6 +569,7 @@ markdeck present examples/code-examples.md
 - [x] PyPI distribution ✓
 - [x] Multiple themes (dark/light/beige) ✓
 - [x] Two-column layouts ✓
+- [x] Custom column widths ✓
 - [x] Wide slide mode ✓
 - [ ] Slide transitions
 - [ ] Media embedding improvements
